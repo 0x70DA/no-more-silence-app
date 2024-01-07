@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 
 const Login = () => {
@@ -64,11 +65,33 @@ const Login = () => {
             </View>
             {/* TODO */}
             <TouchableOpacity style={styles.googleButton}>
-              <Text style={styles.buttonText}>continue with google</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.buttonText}>continue with google</Text>
+                <Image
+                  source={require('../../assets/google_icon.png')}
+                  style={{
+                    width: 37,
+                    height: 36,
+                    position: 'relative',
+                    left: 35,
+                  }}
+                />
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.facebookButton}>
-              <Text style={styles.buttonText}>continue with facebook</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.buttonText}>continue with facebook</Text>
+                <Image
+                  source={require('../../assets/facebook_icon.png')}
+                  style={{
+                    width: 61,
+                    height: 36,
+                    position: 'relative',
+                    left: 24,
+                  }}
+                />
+              </View>
             </TouchableOpacity>
             {/* TODO */}
             <View style={styles.orContainer}>
@@ -95,18 +118,17 @@ const Login = () => {
             </View>
 
             {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
+              <ActivityIndicator size="large" color="#0000ff" />
             ) : (
-            <View>
-              <TouchableOpacity style={styles.signUpButton} onPress={signUp}>
-                <Text style={styles.buttonText}>sign up</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.loginButton} onPress={signIn}>
-                <Text style={styles.buttonText}>Login</Text>
-              </TouchableOpacity>
-            </View>
+              <View>
+                <TouchableOpacity style={styles.signUpButton} onPress={signUp}>
+                  <Text style={styles.buttonText}>sign up</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.loginButton} onPress={signIn}>
+                  <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+              </View>
             )}
-
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
