@@ -5,17 +5,27 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  FlatList,
   Image,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {getStorage, ref, listAll} from 'firebase/storage';
 import Account from './Account';
 
 const Stack = createNativeStackNavigator();
 
 const Sounds = ({navigation}) => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const options = [
+    'animal_and_insects_sounds',
+    'electric_devices_sounds',
+    'human_sounds',
+    'nature_sounds',
+    'public_sounds',
+    'public_transport_sounds',
+  ];
 
   const handleOptionPress = option => {
     setSelectedOption(option);
@@ -57,7 +67,35 @@ const Sounds = ({navigation}) => {
 const SubOptionsScreen = ({route, navigation}) => {
   const {option} = route.params;
   const [searchQuery, setSearchQuery] = useState('');
-  const subOptions = optionsWithSubOptions[option];
+  const [subOptions, setSubOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Get sub-options for the selected option
+  const storage = getStorage();
+  // Create a reference
+  const listRef = ref(storage, `sounds/${option}`);
+
+  // Find all the sub-options.
+  const subOptionsList = [];
+  listAll(listRef)
+    .then(res => {
+      res.prefixes.forEach(folderRef => {
+        // All the prefixes under listRef.
+        subOptionsList.push(
+          folderRef.name
+            .split('_')
+            .map(word => {
+              return word[0].toUpperCase() + word.slice(1);
+            })
+            .join(' '),
+        );
+      });
+      setSubOptions(subOptionsList);
+      setLoading(true);
+    })
+    .catch(error => {
+      console.log(error);
+    });
 
   const handleSubOptionPress = subOption => {
     navigation.navigate('DetailScreen', {subOption});
@@ -65,7 +103,7 @@ const SubOptionsScreen = ({route, navigation}) => {
 
   // Filter sub-options based on the search query
   const filteredSubOptions = subOptions.filter(subOption =>
-    subOption.toLowerCase().includes(searchQuery.toLowerCase()),
+    subOption.toLowerCase().startsWith(searchQuery.toLowerCase()),
   );
 
   return (
@@ -83,22 +121,39 @@ const SubOptionsScreen = ({route, navigation}) => {
       </View>
       <TextInput
         style={styles.searchBar}
-        placeholder="Search Sub Options"
+        placeholder="Search Sounds"
         value={searchQuery}
         onChangeText={text => setSearchQuery(text)}
       />
-      <FlatList
-        data={filteredSubOptions}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item, index}) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.subOptionButton}
-            onPress={() => handleSubOptionPress(item)}>
-            <Text>{item}</Text>
-          </TouchableOpacity>
-        )}
-      />
+      {loading ? (
+        <ScrollView
+          style={{padding: 10, overflow: 'scroll', marginBottom: 100}}>
+          {filteredSubOptions.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.subOptionButton}
+              onPress={() => handleSubOptionPress(item)}>
+              <Text style={styles.optionText}>
+                {item
+                  .split('_')
+                  .map(word => {
+                    return word[0].toUpperCase() + word.slice(1);
+                  })
+                  .join(' ')}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      ) : (
+        <View>
+          <ActivityIndicator
+            size="45"
+            color="#000000"
+            style={{marginTop: 100}}
+          />
+          <Text style={{padding: 5, marginLeft: 10}}>Loading...</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -153,36 +208,6 @@ const SoundPractice = () => {
   );
 };
 
-const options = [
-  'animal_&_insects_sounds',
-  'electric_devices_sounds',
-  'human_sounds',
-  'nature_sounds',
-  'public_sounds',
-  'public_transport_sounds',
-];
-
-const optionsWithSubOptions = {
-  'animal_&_insects_sounds': [
-    'Sub Option 1.1',
-    'Sub Option 1.2',
-    'Sub Option 1.3',
-  ],
-  electric_devices_sounds: [
-    'Sub Option 2.1',
-    'Sub Option 2.2',
-    'Sub Option 2.3',
-  ],
-  human_sounds: ['Sub Option 3.1', 'Sub Option 3.2', 'Sub Option 3.3'],
-  nature_sounds: ['Sub Option 3.1', 'Sub Option 3.2', 'Sub Option 3.3'],
-  public_sounds: ['Sub Option 3.1', 'Sub Option 3.2', 'Sub Option 3.3'],
-  public_transport_sounds: [
-    'Sub Option 3.1',
-    'Sub Option 3.2',
-    'Sub Option 3.3',
-  ],
-};
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -223,17 +248,17 @@ const styles = StyleSheet.create({
   subOptionButton: {
     padding: 10,
     marginVertical: 5,
-    backgroundColor: '#c0c0c0',
-    borderRadius: 5,
+    backgroundColor: '#D9D9D9',
+    width: 351,
+    height: 73,
   },
   searchBar: {
     height: 40,
     borderColor: 'gray',
-    borderWidth: 1,
+    borderWidth: 2,
     padding: 10,
-    margin: 10,
-    borderRadius: 5,
-    width: '80%',
+    marginTop: 10,
+    width: '90%',
   },
 });
 
