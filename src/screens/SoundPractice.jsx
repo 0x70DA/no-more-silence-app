@@ -9,12 +9,10 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {getStorage, ref, listAll} from 'firebase/storage';
-import Account from './Account';
 
-const Stack = createNativeStackNavigator();
+const SoundPracticeStack = createNativeStackNavigator();
 
 const Sounds = ({navigation}) => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -181,30 +179,23 @@ const DetailScreen = ({route}) => {
 
 const SoundPractice = () => {
   return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator initialRouteName="Sounds">
-        <Stack.Screen
-          name="Sounds"
-          component={Sounds}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SubOptions"
-          component={SubOptionsScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="DetailScreen"
-          component={DetailScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Account"
-          component={Account}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SoundPracticeStack.Navigator initialRouteName="Sounds">
+      <SoundPracticeStack.Screen
+        name="Sounds"
+        component={Sounds}
+        options={{headerShown: false}}
+      />
+      <SoundPracticeStack.Screen
+        name="SubOptions"
+        component={SubOptionsScreen}
+        options={{headerShown: false}}
+      />
+      <SoundPracticeStack.Screen
+        name="DetailScreen"
+        component={DetailScreen}
+        options={{headerShown: false}}
+      />
+    </SoundPracticeStack.Navigator>
   );
 };
 
