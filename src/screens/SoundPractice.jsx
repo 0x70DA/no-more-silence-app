@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,25 +9,26 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {getStorage, ref, listAll} from 'firebase/storage';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const SoundPracticeStack = createNativeStackNavigator();
+const soundsMapping = require('../sounds_mapping.json');
+const sounds = [
+  'animal_and_insects_sounds',
+  'electric_devices_sounds',
+  'human_sounds',
+  'nature_sounds',
+  'public_sounds',
+  'public_transport_sounds',
+];
 
-const Sounds = ({navigation}) => {
-  const [selectedOption, setSelectedOption] = useState(null);
-  const options = [
-    'animal_and_insects_sounds',
-    'electric_devices_sounds',
-    'human_sounds',
-    'nature_sounds',
-    'public_sounds',
-    'public_transport_sounds',
-  ];
 
-  const handleOptionPress = option => {
-    setSelectedOption(option);
-    navigation.navigate('SubOptions', {option});
+const Sounds = ({ navigation }) => {
+  const [selectedSound, setSelectedSound] = useState(null);
+
+  const handleSoundPress = sound => {
+    setSelectedSound(sound);
+    navigation.navigate('SubSounds', { sound });
   };
 
   return (
@@ -35,7 +36,7 @@ const Sounds = ({navigation}) => {
       <View style={styles.topBar} />
       <View style={styles.logoContainer}>
         <TouchableOpacity
-          style={{backgroundColor: ''}}
+          style={{ backgroundColor: '' }}
           onPress={() => navigation.navigate('Account')}>
           <Image
             source={require('../../assets/account.png')}
@@ -43,17 +44,15 @@ const Sounds = ({navigation}) => {
           />
         </TouchableOpacity>
       </View>
-      {options.map((option, index) => (
+      {sounds.map((sound, index) => (
         <TouchableOpacity
           key={index}
-          style={styles.optionButton}
-          onPress={() => handleOptionPress(option)}>
-          <Text style={styles.optionText}>
-            {option
-              .split('_')
-              .map(word => {
-                return word[0].toUpperCase() + word.slice(1);
-              })
+          style={styles.soundButton}
+          onPress={() => handleSoundPress(sound)}>
+          <Text style={styles.soundText}>
+            {sound.split('_').map(word => {
+              return word[0].toUpperCase() + word.slice(1);
+            })
               .join(' ')}
           </Text>
         </TouchableOpacity>
@@ -62,46 +61,30 @@ const Sounds = ({navigation}) => {
   );
 };
 
-const SubOptionsScreen = ({route, navigation}) => {
-  const {option} = route.params;
+const SubSoundsScreen = ({ route, navigation }) => {
+  const { sound } = route.params;
   const [searchQuery, setSearchQuery] = useState('');
-  const [subOptions, setSubOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [subSounds, setSubSounds] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Get sub-options for the selected option
-  const storage = getStorage();
-  // Create a reference
-  const listRef = ref(storage, `sounds/${option}`);
+  useEffect(() => {
+    setLoading(true);
+    const subSoundsList = [];
+    for (const subSound in soundsMapping[sound]) {
+      subSoundsList.push(Object.keys(soundsMapping[sound][subSound])[0]);
+    }
+    setSubSounds(subSoundsList);
+    setLoading(false);
+  }, [sound]);
 
-  // Find all the sub-options.
-  const subOptionsList = [];
-  listAll(listRef)
-    .then(res => {
-      res.prefixes.forEach(folderRef => {
-        // All the prefixes under listRef.
-        subOptionsList.push(
-          folderRef.name
-            .split('_')
-            .map(word => {
-              return word[0].toUpperCase() + word.slice(1);
-            })
-            .join(' '),
-        );
-      });
-      setSubOptions(subOptionsList);
-      setLoading(true);
-    })
-    .catch(error => {
-      console.log(error);
-    });
 
-  const handleSubOptionPress = subOption => {
-    navigation.navigate('DetailScreen', {subOption});
+  const handleSubSoundPress = subSound => {
+    navigation.navigate('PlaySoundScreen', { sound, subSound });
   };
 
   // Filter sub-options based on the search query
-  const filteredSubOptions = subOptions.filter(subOption =>
-    subOption.toLowerCase().startsWith(searchQuery.toLowerCase()),
+  const filteredSubSounds = subSounds.filter(subSound =>
+    subSound.toLowerCase().startsWith(searchQuery.toLowerCase()),
   );
 
   return (
@@ -109,7 +92,7 @@ const SubOptionsScreen = ({route, navigation}) => {
       <View style={styles.topBar} />
       <View style={styles.logoContainer}>
         <TouchableOpacity
-          style={{backgroundColor: ''}}
+          style={{ backgroundColor: '' }}
           onPress={() => navigation.navigate('Account')}>
           <Image
             source={require('../../assets/account.png')}
@@ -123,48 +106,47 @@ const SubOptionsScreen = ({route, navigation}) => {
         value={searchQuery}
         onChangeText={text => setSearchQuery(text)}
       />
-      {loading ? (
+      {!loading ? (
         <ScrollView
-          style={{padding: 10, overflow: 'scroll', marginBottom: 100}}>
-          {filteredSubOptions.map((item, index) => (
+          style={{ padding: 10, overflow: 'scroll', marginBottom: 100 }}>
+          {filteredSubSounds.map((item, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.subOptionButton}
-              onPress={() => handleSubOptionPress(item)}>
-              <Text style={styles.optionText}>
-                {item
-                  .split('_')
-                  .map(word => {
-                    return word[0].toUpperCase() + word.slice(1);
-                  })
-                  .join(' ')}
+              style={styles.subSoundButton}
+              onPress={() => handleSubSoundPress(item)}>
+              <Text style={styles.soundText}>
+                {item.split('_').map(word => {
+                  return word[0].toUpperCase() + word.slice(1);
+                }).join(' ')}
               </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
       ) : (
         <View>
-          <ActivityIndicator
-            size="45"
-            color="#000000"
-            style={{marginTop: 100}}
-          />
-          <Text style={{padding: 5, marginLeft: 10}}>Loading...</Text>
+          <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
+          <Text style={{ padding: 5, marginLeft: 10 }}>Loading...</Text>
         </View>
       )}
     </View>
   );
 };
 
-const DetailScreen = ({route}) => {
-  const {subOption} = route.params;
+
+const PlaySoundScreen = ({ route, navigation }) => {
+  const { sound, subSound } = route.params;
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.topBar} />
       <View style={styles.logoContainer}>
         <TouchableOpacity
-          style={{backgroundColor: ''}}
+          style={{ backgroundColor: '' }}
           onPress={() => navigation.navigate('Account')}>
           <Image
             source={require('../../assets/account.png')}
@@ -172,7 +154,11 @@ const DetailScreen = ({route}) => {
           />
         </TouchableOpacity>
       </View>
-      <Text>{`Detail Screen: ${subOption}`}</Text>
+      {!loading ? (
+        <Text>{`Detail Screen: ${subSound}`}</Text>
+      ) : (
+        <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
+      )}
     </View>
   );
 };
@@ -183,17 +169,17 @@ const SoundPractice = () => {
       <SoundPracticeStack.Screen
         name="Sounds"
         component={Sounds}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <SoundPracticeStack.Screen
-        name="SubOptions"
-        component={SubOptionsScreen}
-        options={{headerShown: false}}
+        name="SubSounds"
+        component={SubSoundsScreen}
+        options={{ headerShown: false }}
       />
       <SoundPracticeStack.Screen
-        name="DetailScreen"
-        component={DetailScreen}
-        options={{headerShown: false}}
+        name="PlaySoundScreen"
+        component={PlaySoundScreen}
+        options={{ headerShown: false }}
       />
     </SoundPracticeStack.Navigator>
   );
@@ -220,14 +206,14 @@ const styles = StyleSheet.create({
     height: 45,
     resizeMode: 'contain',
   },
-  optionButton: {
+  soundButton: {
     padding: 10,
     marginVertical: 10,
     backgroundColor: '#D9D9D9',
     width: 351,
     height: 73,
   },
-  optionText: {
+  soundText: {
     color: 'black',
     fontSize: 24,
     fontFamily: 'Inter',
@@ -236,7 +222,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 10,
   },
-  subOptionButton: {
+  subSoundButton: {
     padding: 10,
     marginVertical: 5,
     backgroundColor: '#D9D9D9',
