@@ -135,9 +135,20 @@ const SubSoundsScreen = ({ route, navigation }) => {
 
 const PlaySoundScreen = ({ route, navigation }) => {
   const { sound, subSound } = route.params;
+  const [images, setImages] = useState([]);
+  const [audio, setAudio] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
+
+    for (const item in soundsMapping[sound]) {
+      if (Object.keys(soundsMapping[sound][item])[0] === subSound) {
+        setAudio(Object.values(soundsMapping[sound][item])[0]["audio"]);
+        setImages(Object.values(soundsMapping[sound][item])[0]["images"]);
+        break;
+      }
+    }
     setLoading(false);
   }, []);
 
@@ -155,7 +166,12 @@ const PlaySoundScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
       {!loading ? (
-        <Text>{`Detail Screen: ${subSound}`}</Text>
+        <View>
+          {images.map((image, index) => (
+            <Text key={index}>{image}</Text>
+          ))}
+          <Text>{audio}</Text>
+        </View>
       ) : (
         <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
       )}
