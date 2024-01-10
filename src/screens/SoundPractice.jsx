@@ -141,6 +141,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
   const [audio, setAudio] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
   const [isSoundLoaded, setIsSoundLoaded] = useState(false);
   const [soundFile, setSoundFile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -177,21 +178,34 @@ const PlaySoundScreen = ({ route, navigation }) => {
         loadedSound = new Sound(files[`${sound}/${subSound}/${audio}`], null);
         loadedSound.setVolume(1);
         loadedSound.setNumberOfLoops(-1); // for infinite loop
+
+        // Set initial progress
         loadedSound.setCurrentTime(progress * loadedSound.getDuration() / 100);
+
         setSoundFile(loadedSound);
         setIsSoundLoaded(true);
+
+        // Set up timer to preiodically update progress
+        const progressInterval = setInterval(() => {
+          loadedSound.getCurrentTime((seconds, isPlaying) => {
+            if (isPlaying) {
+              handleProgress(seconds, loadedSound);
+            }
+          });
+        }, 1000);
+
+        return () => {
+          clearInterval(progressInterval);
+          if (loadedSound) {
+            loadedSound.release();
+          }
+        };
+
       } catch (error) {
         console.log(error);
       }
-
-      return () => {
-        if (loadedSound) {
-          loadedSound.release();
-        }
-      };
-
     }
-  }, [audio, progress]);
+  }, [audio]);
 
   const handlePlayPause = () => {
     if (isSoundLoaded) {
@@ -204,8 +218,9 @@ const PlaySoundScreen = ({ route, navigation }) => {
     }
   };
 
-  const handleProgress = (position) => {
-    const percentage = (position / soundFile.getDuration()) * 100;
+  const handleProgress = (position, soundFile) => {
+    const duration = soundFile.getDuration();
+    const percentage = (position / duration) * 100;
     setProgress(percentage);
   };
 
@@ -222,7 +237,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      {!loading ? (
+      {!loading && soundFile ? (
         <View style={{ flexDirection: 'column' }}>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity onPress={handlePrevImage} style={styles.arrowButton}>
@@ -235,7 +250,9 @@ const PlaySoundScreen = ({ route, navigation }) => {
               <Image source={require('../../assets/right_arrow.png')} style={styles.arrowIcon} />
             </TouchableOpacity>
           </View>
-          <ProgressBar styleAttr="Horizontal" progress={progress / 100} indeterminate={false} />
+
+          <ProgressBar styleAttr="Horizontal" progress={progress / 100} indeterminate={false} style={{ padding: 20 }} />
+
           <TouchableOpacity style={styles.button} onPress={handlePlayPause}>
             <Text style={styles.buttonText}>{isPlaying ? 'Pause' : 'Play'}</Text>
           </TouchableOpacity>
