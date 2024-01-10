@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import files from '../../assets/sounds/index';
 
 const SoundPracticeStack = createNativeStackNavigator();
 const soundsMapping = require('../sounds_mapping.json');
@@ -132,12 +133,22 @@ const SubSoundsScreen = ({ route, navigation }) => {
   );
 };
 
-
 const PlaySoundScreen = ({ route, navigation }) => {
   const { sound, subSound } = route.params;
   const [images, setImages] = useState([]);
   const [audio, setAudio] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    );
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -165,12 +176,19 @@ const PlaySoundScreen = ({ route, navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      {!loading ? (
+      {!loading && images.length > 0 ? (
         <View>
-          {images.map((image, index) => (
-            <Text key={index}>{image}</Text>
-          ))}
-          <Text>{audio}</Text>
+          <View>
+            <Image source={files[`${sound}/${subSound}/${images[currentImageIndex]}`]} style={styles.image} />
+          </View>
+          <View style={styles.arrowContainer}>
+            <TouchableOpacity onPress={handlePrevImage} style={styles.arrowButton}>
+              <Text>{'<'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleNextImage} style={styles.arrowButton}>
+              <Text>{'>'}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       ) : (
         <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
@@ -252,6 +270,18 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 10,
     width: '90%',
+  },
+  image: {
+    width: 350,
+    height: 360,
+    resizeMode: 'cover',
+  },
+  arrowContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  arrowButton: {
+    padding: 10,
   },
 });
 
