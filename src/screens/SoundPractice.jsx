@@ -178,15 +178,15 @@ const PlaySoundScreen = ({ route, navigation }) => {
       </View>
       {!loading && images.length > 0 ? (
         <View>
-          <View>
-            <Image source={files[`${sound}/${subSound}/${images[currentImageIndex]}`]} style={styles.image} />
-          </View>
-          <View style={styles.arrowContainer}>
+          <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity onPress={handlePrevImage} style={styles.arrowButton}>
-              <Text>{'<'}</Text>
+              <Image source={require('../../assets/left_arrow.png')} style={styles.arrowIcon} />
             </TouchableOpacity>
+            <View style={styles.imageContainer}>
+              <Image source={files[`${sound}/${subSound}/${images[currentImageIndex]}`]} style={styles.image} />
+            </View>
             <TouchableOpacity onPress={handleNextImage} style={styles.arrowButton}>
-              <Text>{'>'}</Text>
+              <Image source={require('../../assets/right_arrow.png')} style={styles.arrowIcon} />
             </TouchableOpacity>
           </View>
         </View>
@@ -271,10 +271,21 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: '90%',
   },
+  imageContainer: {
+    position: 'relative',
+    width: 300,
+    height: 350,
+    marginTop: 25,
+    borderRadius: 39,
+    borderColor: 'grey',
+    borderWidth: 2,
+    overflow: 'hidden',
+  },
   image: {
-    width: 350,
-    height: 360,
-    resizeMode: 'cover',
+    flex: 1,
+    width: null,
+    height: null,
+    resizeMode: 'stretch',
   },
   arrowContainer: {
     flexDirection: 'row',
@@ -282,6 +293,15 @@ const styles = StyleSheet.create({
   },
   arrowButton: {
     padding: 10,
+    position: 'relative',
+    top: 170,
+  },
+  arrowIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+    position: 'relative',
+    marginHorizontal: -15,
   },
 });
 
