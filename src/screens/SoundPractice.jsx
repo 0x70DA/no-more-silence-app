@@ -9,6 +9,8 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import { ProgressBar } from '@react-native-community/progress-bar-android';
+import Sound from 'react-native-sound';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import files from '../../assets/sounds/index';
 
@@ -137,6 +139,10 @@ const PlaySoundScreen = ({ route, navigation }) => {
   const { sound, subSound } = route.params;
   const [images, setImages] = useState([]);
   const [audio, setAudio] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isSoundLoaded, setIsSoundLoaded] = useState(false);
+  const [soundFile, setSoundFile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -163,6 +169,46 @@ const PlaySoundScreen = ({ route, navigation }) => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    let loadedSound;
+
+    if (audio.length > 0) {
+      try {
+        loadedSound = new Sound(files[`${sound}/${subSound}/${audio}`], null);
+        loadedSound.setVolume(1);
+        loadedSound.setNumberOfLoops(-1); // for infinite loop
+        loadedSound.setCurrentTime(progress * loadedSound.getDuration() / 100);
+        setSoundFile(loadedSound);
+        setIsSoundLoaded(true);
+      } catch (error) {
+        console.log(error);
+      }
+
+      return () => {
+        if (loadedSound) {
+          loadedSound.release();
+        }
+      };
+
+    }
+  }, [audio, progress]);
+
+  const handlePlayPause = () => {
+    if (isSoundLoaded) {
+      if (isPlaying) {
+        soundFile.pause();
+      } else {
+        soundFile.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleProgress = (position) => {
+    const percentage = (position / soundFile.getDuration()) * 100;
+    setProgress(percentage);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar} />
@@ -176,8 +222,8 @@ const PlaySoundScreen = ({ route, navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      {!loading && images.length > 0 ? (
-        <View>
+      {!loading ? (
+        <View style={{ flexDirection: 'column' }}>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity onPress={handlePrevImage} style={styles.arrowButton}>
               <Image source={require('../../assets/left_arrow.png')} style={styles.arrowIcon} />
@@ -189,6 +235,10 @@ const PlaySoundScreen = ({ route, navigation }) => {
               <Image source={require('../../assets/right_arrow.png')} style={styles.arrowIcon} />
             </TouchableOpacity>
           </View>
+          <ProgressBar styleAttr="Horizontal" progress={progress / 100} indeterminate={false} />
+          <TouchableOpacity style={styles.button} onPress={handlePlayPause}>
+            <Text style={styles.buttonText}>{isPlaying ? 'Pause' : 'Play'}</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
