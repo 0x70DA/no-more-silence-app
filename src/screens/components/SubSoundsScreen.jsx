@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
 
 const soundsMapping = require('../../sounds_mapping.json');
 
@@ -60,54 +60,62 @@ const SubSoundsScreen = ({ route, navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search Sounds"
-        value={searchQuery}
-        onChangeText={text => setSearchQuery(text)}
-      />
-      {!loading ? (
-        <ScrollView
-          style={{ padding: 10, overflow: 'scroll', marginBottom: 100 }}>
-          {filteredSubSounds.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.subSoundButton}
-              onPress={() => handleSubSoundPress(item)}>
-              <Text style={styles.soundText}>
-                {item.split('_').map(word => {
-                  return word[0].toUpperCase() + word.slice(1);
-                }).join(' ')}
-              </Text>
-            </TouchableOpacity>
-          ))}
+      <KeyboardAvoidingView behavior='padding'>
+        <ScrollView style={{ marginTop: 90, flex: 1 }}>
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Search Sounds"
+            value={searchQuery}
+            onChangeText={text => setSearchQuery(text)}
+          />
+          {!loading ? (
+            <View
+              style={{ padding: 10, overflow: 'scroll' }}>
+              {filteredSubSounds.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.subSoundButton}
+                  onPress={() => handleSubSoundPress(item)}>
+                  <Text style={styles.soundText}>
+                    {item.split('_').map(word => {
+                      return word[0].toUpperCase() + word.slice(1);
+                    }).join(' ')}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : (
+            <View>
+              <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
+              <Text style={styles.loadingText}>Loading...</Text>
+            </View>
+          )}
         </ScrollView>
-      ) : (
-        <View>
-          <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      )}
+      </KeyboardAvoidingView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
   },
   topBar: {
-    width: 413,
+    width: '100%',
     height: 72,
     backgroundColor: '#052E45',
-  },
-  buttonContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
+  },
+  buttonContainer: {
     flexDirection: 'row',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
   },
   button: {
     width: 55,
@@ -120,15 +128,15 @@ const styles = StyleSheet.create({
     top: 15,
   },
   screenTitle: {
-    position: 'relative',
-    width: 300,
-    top: 20,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 15,
   },
   screenTitleText: {
     color: 'white',
     fontSize: 21,
     fontWeight: 'bold',
-    alignSelf: 'center'
   },
   homeButton: {
     backgroundColor: '#D9D9D9',
@@ -142,6 +150,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 10,
     width: '90%',
+    alignSelf: 'center',
   },
   loadingText: {
     padding: 5,

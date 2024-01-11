@@ -5,13 +5,24 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.topBar} />
-      <View style={styles.logoContainer}>
+      <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={{ backgroundColor: '' }}
+          style={styles.accountButton}
           onPress={() => navigation.navigate('Account')}>
           <Image
             source={require('../../assets/account.png')}
-            style={styles.logo}
+            style={styles.button}
+          />
+        </TouchableOpacity>
+
+        <View style={styles.screenTitle}>
+          <Text style={styles.screenTitleText}>Home Page</Text>
+        </View>
+
+        <TouchableOpacity style={styles.homeButton} disabled={true}>
+          <Image
+            source={require('../../assets/home.png')}
+            style={styles.button}
           />
         </TouchableOpacity>
       </View>
@@ -28,7 +39,7 @@ const Home = ({ navigation }) => {
       />
       <TouchableOpacity
         style={styles.identificationButton}
-        onPress={() => navigation.navigate('SoundId')}>
+        onPress={() => navigation.navigate('SoundIdentification')}>
         <View style={{ flexDirection: 'row', marginTop: 4 }}>
           <Text style={styles.buttonText}>sound{'\n'}identification</Text>
           <Image
@@ -95,29 +106,50 @@ const Home = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 413,
-    height: 913,
-    backgroundColor: 'white',
-    overflow: 'hidden',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   topBar: {
-    width: 413,
+    width: '100%',
     height: 72,
     backgroundColor: '#052E45',
-  },
-  logoContainer: {
     position: 'absolute',
-    left: 5,
-    top: 14,
-    backgroundColor: '#D9D9D9',
-    width: 60,
-    height: 45,
-    justifyContent: 'center',
+    top: 0,
+    left: 0,
   },
-  logo: {
-    width: 60,
+  buttonContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
+  },
+  button: {
+    width: 55,
     height: 45,
     resizeMode: 'contain',
+  },
+  accountButton: {
+    backgroundColor: '#D9D9D9',
+    left: 10,
+    top: 15,
+  },
+  screenTitle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 15,
+  },
+  screenTitleText: {
+    color: 'white',
+    fontSize: 21,
+    fontWeight: 'bold',
+  },
+  homeButton: {
+    backgroundColor: '#D9D9D9',
+    right: 10,
+    top: 15,
   },
   identificationButton: {
     backgroundColor: '#052E45',

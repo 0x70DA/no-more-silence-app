@@ -6,7 +6,7 @@ import Note from './src/screens/Note';
 import Login from './src/screens/Login';
 import Home from './src/screens/Home';
 import Account from './src/screens/Account';
-import SoundId from './src/screens/SoundId';
+import SoundIdentification from './src/screens/SoundIdentification';
 import SoundPractice from './src/screens/SoundPractice';
 import AuditoryDiscrimination from './src/screens/AuditoryDiscrimination';
 import {onAuthStateChanged} from 'firebase/auth';
@@ -30,8 +30,8 @@ function InsideLayout() {
         options={{headerShown: false}}
       />
       <InsideStack.Screen
-        name="SoundId"
-        component={SoundId}
+        name="SoundIdentification"
+        component={SoundIdentification}
         options={{headerShown: false}}
       />
       <InsideStack.Screen

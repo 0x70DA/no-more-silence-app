@@ -137,7 +137,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
       {!loading ? (
-        <View>
+        <View style={{ position: 'absolute', top: 90 }}>
           <View style={styles.soundTitleContainer}>
             <Text style={styles.soundTitleText}>
               {subSound.split('_').map(word => {
@@ -194,20 +194,24 @@ const PlaySoundScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
   },
   topBar: {
-    width: 413,
+    width: '100%',
     height: 72,
     backgroundColor: '#052E45',
-  },
-  buttonContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
+  },
+  buttonContainer: {
     flexDirection: 'row',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
   },
   button: {
     width: 55,
@@ -220,15 +224,15 @@ const styles = StyleSheet.create({
     top: 15,
   },
   screenTitle: {
-    position: 'relative',
-    width: 300,
-    top: 20,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 15,
   },
   screenTitleText: {
     color: 'white',
     fontSize: 21,
     fontWeight: 'bold',
-    alignSelf: 'center'
   },
   homeButton: {
     backgroundColor: '#D9D9D9',
@@ -241,7 +245,6 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: 15
   },
   soundTitleText: {
     alignSelf: 'center',
