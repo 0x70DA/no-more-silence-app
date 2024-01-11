@@ -128,14 +128,13 @@ const SubSoundsScreen = ({ route, navigation }) => {
       ) : (
         <View>
           <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
-          <Text style={{ padding: 5, marginLeft: 10 }}>Loading...</Text>
+          <Text style={styles.loadingText}>Loading...</Text>
         </View>
       )}
     </View>
   );
 };
 
-let initialized = false;
 
 const PlaySoundScreen = ({ route, navigation }) => {
   const { sound, subSound } = route.params;
@@ -159,16 +158,11 @@ const PlaySoundScreen = ({ route, navigation }) => {
       }
     }
 
-    setLoading(false);
+    // setLoading(false);
   }, []);
 
   useEffect(() => {
     const initialize = async () => {
-      if (!initialized) {
-        await TrackPlayer.setupPlayer();
-        initialized = true;
-      }
-
       await TrackPlayer.add({
         id: 'audio',
         url: files[`${sound}/${subSound}/${audio}`],
@@ -255,7 +249,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
       {!loading ? (
-        <View style={{ flexDirection: 'column' }}>
+        <View>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity onPress={handlePrevImage} style={styles.arrowButton}>
               <Image source={require('../../assets/left_arrow.png')} style={styles.arrowIcon} />
@@ -283,7 +277,10 @@ const PlaySoundScreen = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       ) : (
-        <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
+        <View>
+          <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
+          <Text style={styles.loadingText}>Loading...</Text>
+        </View>
       )}
     </View>
   );
@@ -348,6 +345,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 10,
   },
+  loadingText: {
+    padding: 5,
+    marginLeft: 10,
+    color: 'black'
+  },
   subSoundButton: {
     padding: 10,
     marginVertical: 5,
@@ -402,7 +404,8 @@ const styles = StyleSheet.create({
   },
   progressBarText: {
     textAlign: 'center',
-    paddingTop: 10
+    paddingTop: 10,
+    color: 'black',
   },
 });
 
