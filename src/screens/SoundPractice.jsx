@@ -9,8 +9,8 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import { ProgressBar } from '@react-native-community/progress-bar-android';
-import Sound from 'react-native-sound';
+import TrackPlayer, { usePlaybackState, useTrackPlayerEvents, State } from 'react-native-track-player';
+import ProgressBar from 'react-native-progress/Bar'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import files from '../../assets/sounds/index';
 
@@ -135,27 +135,18 @@ const SubSoundsScreen = ({ route, navigation }) => {
   );
 };
 
+let initialized = false;
+
 const PlaySoundScreen = ({ route, navigation }) => {
   const { sound, subSound } = route.params;
   const [images, setImages] = useState([]);
   const [audio, setAudio] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [totalDuration, setTotalDuration] = useState(0);
-  const [isSoundLoaded, setIsSoundLoaded] = useState(false);
-  const [soundFile, setSoundFile] = useState(null);
+  const [duration, setDuration] = useState(0);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const handlePrevImage = () => {
-    setCurrentImageIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
-    );
-  };
+  const playbackState = usePlaybackState();
 
   useEffect(() => {
     setLoading(true);
@@ -167,62 +158,88 @@ const PlaySoundScreen = ({ route, navigation }) => {
         break;
       }
     }
+
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    let loadedSound;
+    const initialize = async () => {
+      if (!initialized) {
+        await TrackPlayer.setupPlayer();
+        initialized = true;
+      }
+
+      await TrackPlayer.add({
+        id: 'audio',
+        url: files[`${sound}/${subSound}/${audio}`],
+      });
+      setLoading(false);
+    };
 
     if (audio.length > 0) {
-      try {
-        loadedSound = new Sound(files[`${sound}/${subSound}/${audio}`], null);
-        loadedSound.setVolume(1);
-        loadedSound.setNumberOfLoops(-1); // for infinite loop
-
-        // Set initial progress
-        loadedSound.setCurrentTime(progress * loadedSound.getDuration() / 100);
-
-        setSoundFile(loadedSound);
-        setIsSoundLoaded(true);
-
-        // Set up timer to preiodically update progress
-        const progressInterval = setInterval(() => {
-          loadedSound.getCurrentTime((seconds, isPlaying) => {
-            if (isPlaying) {
-              handleProgress(seconds, loadedSound);
-            }
-          });
-        }, 1000);
-
-        return () => {
-          clearInterval(progressInterval);
-          if (loadedSound) {
-            loadedSound.release();
-          }
-        };
-
-      } catch (error) {
-        console.log(error);
-      }
+      initialize();
     }
+
   }, [audio]);
 
-  const handlePlayPause = () => {
-    if (isSoundLoaded) {
-      if (isPlaying) {
-        soundFile.pause();
-      } else {
-        soundFile.play();
+  useEffect(() => {
+    // Clean up player when component unmounts.
+    return () => {
+      const stopPlayer = async () => {
+        await TrackPlayer.reset();
+      };
+      stopPlayer();
+    };
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      if (playbackState.state === State.Playing) {
+        const position = await TrackPlayer.getProgress().then((progress) => progress.position);
+        const currentDuration = await TrackPlayer.getProgress().then((progress) => progress.duration);
+        const percentage = (position / currentDuration) * 100;
+        setProgress(percentage);
+        setDuration(currentDuration);
       }
-      setIsPlaying(!isPlaying);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [playbackState]);
+
+  const handlePlayPause = async () => {
+    if (isPlaying) {
+      await TrackPlayer.pause();
+    } else {
+      await TrackPlayer.play();
     }
+    setIsPlaying(!isPlaying);
   };
 
-  const handleProgress = (position, soundFile) => {
-    const duration = soundFile.getDuration();
-    const percentage = (position / duration) * 100;
-    setProgress(percentage);
+  // Listen for the track playback end event
+  useTrackPlayerEvents(['playback-queue-ended'], async () => {
+    setProgress(0);
+    setIsPlaying(false);
+
+    await TrackPlayer.seekTo(0);
+    await TrackPlayer.pause();
+  });
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    );
+  };
+
 
   return (
     <View style={styles.container}>
@@ -237,7 +254,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      {!loading && soundFile ? (
+      {!loading ? (
         <View style={{ flexDirection: 'column' }}>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity onPress={handlePrevImage} style={styles.arrowButton}>
@@ -251,7 +268,15 @@ const PlaySoundScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
 
-          <ProgressBar styleAttr="Horizontal" progress={progress / 100} indeterminate={false} style={{ padding: 20 }} />
+          <View style={styles.progressBarContainer}>
+            <ProgressBar progress={progress / 100} borderWidth={0} width={null} color={'#052E45'} unfilledColor={'#999993'} />
+          </View>
+
+          <Text style={styles.progressBarText}>
+            {formatTime(progress * (duration / 100))}
+            {' / '}
+            {formatTime(duration)}
+          </Text>
 
           <TouchableOpacity style={styles.button} onPress={handlePlayPause}>
             <Text style={styles.buttonText}>{isPlaying ? 'Pause' : 'Play'}</Text>
@@ -369,6 +394,15 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     position: 'relative',
     marginHorizontal: -15,
+  },
+  progressBarContainer: {
+    width: 350,
+    paddingTop: 20,
+    alignSelf: 'center',
+  },
+  progressBarText: {
+    textAlign: 'center',
+    paddingTop: 10
   },
 });
 
