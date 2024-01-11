@@ -6,8 +6,9 @@ import SubSoundsScreen from './components/SubSoundsScreen';
 import PlaySoundScreen from './components/PlaySoundScreen';
 
 const Stack = createNativeStackNavigator();
+let identificationType;
 
-const IdentificationType = ({navigation}) => {
+const IdentificationType = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.topBar} />
@@ -34,12 +35,18 @@ const IdentificationType = ({navigation}) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 50}}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 50 }}>
         <Text>Identification Type</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          identificationType = 'existence';
+          navigation.navigate('SoundsScreen');
+        }}>
           <Text>Existence of Sound</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          identificationType = 'direction';
+          navigation.navigate('SoundsScreen');
+        }}>
           <Text>Direction of Sound</Text>
         </TouchableOpacity>
       </View>
@@ -69,6 +76,7 @@ const SoundIdentification = () => {
         name="PlaySoundScreen"
         component={PlaySoundScreen}
         options={{ headerShown: false }}
+        initialParams={{ identificationType: identificationType }}
       />
     </Stack.Navigator>
   );

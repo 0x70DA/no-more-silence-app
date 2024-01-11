@@ -9,7 +9,7 @@ import files from '../../../assets/sounds';
 const soundsMapping = require('../../sounds_mapping.json');
 
 const PlaySoundScreen = ({ route, navigation }) => {
-  const { sound, subSound } = route.params;
+  const { sound, subSound, identificationType } = route.params;
   const [images, setImages] = useState([]);
   const [audio, setAudio] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -180,7 +180,18 @@ const PlaySoundScreen = ({ route, navigation }) => {
               </TouchableOpacity>
             </View>
           )}
-
+          {identificationType === 'direction' &&
+            <View style={{ marginTop: 25 }}>
+              <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'black' }}>
+                Direction of Sound
+              </Text>
+            </View>}
+          {identificationType === 'existence' &&
+            <View style={{ marginTop: 25 }}>
+              <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'black' }}>
+                Existence of Sound
+              </Text>
+            </View>}
         </View>
       ) : (
         <View>
@@ -249,7 +260,7 @@ const styles = StyleSheet.create({
   soundTitleText: {
     alignSelf: 'center',
     color: 'black',
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold'
   },
   loadingText: {

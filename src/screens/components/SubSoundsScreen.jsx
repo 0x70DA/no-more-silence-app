@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     padding: 5,
-    marginLeft: 10,
+    alignSelf: 'center',
     color: 'black'
   },
   subSoundButton: {
