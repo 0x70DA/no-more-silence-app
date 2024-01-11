@@ -136,7 +136,6 @@ const SubSoundsScreen = ({ route, navigation }) => {
   );
 };
 
-
 const PlaySoundScreen = ({ route, navigation }) => {
   const { sound, subSound } = route.params;
   const [images, setImages] = useState([]);
@@ -158,6 +157,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
         break;
       }
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -166,7 +166,6 @@ const PlaySoundScreen = ({ route, navigation }) => {
         id: 'audio',
         url: files[`${sound}/${subSound}/${audio}`],
       });
-      setLoading(false);
     };
 
     if (audio.length > 0) {
@@ -268,19 +267,30 @@ const PlaySoundScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.progressBarContainer}>
-            <ProgressBar progress={progress / 100} borderWidth={0} width={null} height={8} color={'#052E45'} unfilledColor={'#999993'} />
-          </View>
+          {audio.length === 0 ? (
+            <View style={{ marginTop: 25 }}>
+              <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'black' }}>
+                No audio file found!
+              </Text>
+            </View>
+          ) : (
+            <View>
+              <View style={styles.progressBarContainer}>
+                <ProgressBar progress={progress / 100} borderWidth={0} width={null} height={8} color={'#052E45'} unfilledColor={'#999993'} />
+              </View>
 
-          <Text style={styles.progressBarText}>
-            {formatTime(progress * (duration / 100))}
-            {' / '}
-            {formatTime(duration)}
-          </Text>
+              <Text style={styles.progressBarText}>
+                {formatTime(progress * (duration / 100))}
+                {' / '}
+                {formatTime(duration)}
+              </Text>
 
-          <TouchableOpacity style={styles.playButton} onPress={handlePlayPause}>
-            <Icon name={isPlaying ? 'pause-circle-sharp' : 'play-circle-sharp'} size={80} color="#052E45" />
-          </TouchableOpacity>
+              <TouchableOpacity style={styles.playButton} onPress={handlePlayPause}>
+                <Icon name={isPlaying ? 'pause-circle-sharp' : 'play-circle-sharp'} size={80} color="#052E45" />
+              </TouchableOpacity>
+            </View>
+          )}
+
         </View>
       ) : (
         <View>
