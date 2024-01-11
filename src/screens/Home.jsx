@@ -1,13 +1,13 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.topBar} />
       <View style={styles.logoContainer}>
         <TouchableOpacity
-          style={{backgroundColor: ''}}
+          style={{ backgroundColor: '' }}
           onPress={() => navigation.navigate('Account')}>
           <Image
             source={require('../../assets/account.png')}
@@ -29,11 +29,11 @@ const Home = ({navigation}) => {
       <TouchableOpacity
         style={styles.identificationButton}
         onPress={() => navigation.navigate('SoundId')}>
-        <View style={{flexDirection: 'row', marginTop: 4}}>
+        <View style={{ flexDirection: 'row', marginTop: 4 }}>
           <Text style={styles.buttonText}>sound{'\n'}identification</Text>
           <Image
             source={require('../../assets/sound_identification.png')}
-            style={{width: 62, height: 70, position: 'absolute', right: 0}}
+            style={{ width: 62, height: 70, position: 'absolute', right: 0 }}
           />
         </View>
       </TouchableOpacity>
@@ -51,11 +51,11 @@ const Home = ({navigation}) => {
       <TouchableOpacity
         style={styles.practiceButton}
         onPress={() => navigation.navigate('SoundPractice')}>
-        <View style={{flexDirection: 'row', marginTop: 4}}>
+        <View style={{ flexDirection: 'row', marginTop: 4 }}>
           <Text style={styles.buttonText}>differnet sound{'\n'}practice</Text>
           <Image
             source={require('../../assets/sound_practice.png')}
-            style={{width: 44, height: 62, position: 'absolute', right: 10}}
+            style={{ width: 44, height: 62, position: 'absolute', right: 10 }}
           />
         </View>
       </TouchableOpacity>
@@ -73,7 +73,7 @@ const Home = ({navigation}) => {
       <TouchableOpacity
         style={styles.auditoryButton}
         onPress={() => navigation.navigate('AuditoryDiscrimination')}>
-        <View style={{flexDirection: 'row', marginTop: 4}}>
+        <View style={{ flexDirection: 'row', marginTop: 4 }}>
           <Text style={styles.buttonText}>
             auditory discrimination activity
           </Text>
@@ -103,15 +103,19 @@ const styles = StyleSheet.create({
   topBar: {
     width: 413,
     height: 72,
-    backgroundColor: '#E3EFFA',
+    backgroundColor: '#052E45',
   },
   logoContainer: {
     position: 'absolute',
-    left: 0,
+    left: 5,
     top: 14,
+    backgroundColor: '#D9D9D9',
+    width: 60,
+    height: 45,
+    justifyContent: 'center',
   },
   logo: {
-    width: 74,
+    width: 60,
     height: 45,
     resizeMode: 'contain',
   },

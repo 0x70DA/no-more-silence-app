@@ -249,6 +249,13 @@ const PlaySoundScreen = ({ route, navigation }) => {
       </View>
       {!loading ? (
         <View>
+          <View style={styles.titleContainer}>
+            <Text style={styles.titleText}>
+              {subSound.split('_').map(word => {
+                return word[0].toUpperCase() + word.slice(1);
+              }).join(' ')}
+            </Text>
+          </View>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity onPress={handlePrevImage} style={styles.arrowButton}>
               <Image source={require('../../assets/left_arrow.png')} style={styles.arrowIcon} />
@@ -272,7 +279,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
           </Text>
 
           <TouchableOpacity style={styles.playButton} onPress={handlePlayPause}>
-            <Icon name={isPlaying ? 'pause-circle-sharp' : 'play-circle-sharp'} size={60} color="black" />
+            <Icon name={isPlaying ? 'pause-circle-sharp' : 'play-circle-sharp'} size={80} color="#052E45" />
           </TouchableOpacity>
         </View>
       ) : (
@@ -316,17 +323,35 @@ const styles = StyleSheet.create({
   topBar: {
     width: 413,
     height: 72,
-    backgroundColor: '#E3EFFA',
+    backgroundColor: '#052E45',
   },
   logoContainer: {
     position: 'absolute',
-    left: 0,
+    left: 5,
     top: 14,
+    backgroundColor: '#D9D9D9',
+    width: 60,
+    height: 45,
+    justifyContent: 'center',
   },
   logo: {
-    width: 74,
+    width: 60,
     height: 45,
     resizeMode: 'contain',
+  },
+  titleContainer: {
+    backgroundColor: '#D9D9D9',
+    width: 350,
+    height: 50,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 15
+  },
+  titleText: {
+    alignSelf: 'center',
+    color: 'black',
+    fontSize: 22,
+    fontWeight: 'bold'
   },
   soundButton: {
     padding: 10,
