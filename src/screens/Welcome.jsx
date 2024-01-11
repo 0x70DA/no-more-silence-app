@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 const Welcome = ({navigation}) => {
   return (
     <View style={styles.container}>
-        <Image source={require('../../assets/welcome.png')} style={styles.img} resizeMode="cover"/>
+        <Image source={require('../../assets/welcome.png')} style={styles.image} resizeMode="cover"/>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('Note')}>
@@ -38,9 +38,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
   },
-  img: {
-    width: 260,
-    height: 240,
+  image: {
+    width: 376,
+    height: 256,
     alignSelf: 'center',
     marginTop: 200,
   }
