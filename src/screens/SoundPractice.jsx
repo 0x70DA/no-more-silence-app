@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  TextInput,
   Image,
-  ScrollView,
-  ActivityIndicator,
 } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PlaySoundScreen from './components/PlaySoundScreen';
+import SubSoundsScreen from './components/SubSoundsScreen';
 
 const SoundPracticeStack = createNativeStackNavigator();
-const soundsMapping = require('../sounds_mapping.json');
 const sounds = [
   'animal_and_insects_sounds',
   'electric_devices_sounds',
@@ -71,95 +68,6 @@ const Sounds = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       ))}
-    </View>
-  );
-};
-
-const SubSoundsScreen = ({ route, navigation }) => {
-  const { sound } = route.params;
-  const [searchQuery, setSearchQuery] = useState('');
-  const [subSounds, setSubSounds] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    const subSoundsList = [];
-    for (const subSound in soundsMapping[sound]) {
-      subSoundsList.push(Object.keys(soundsMapping[sound][subSound])[0]);
-    }
-    setSubSounds(subSoundsList);
-    setLoading(false);
-  }, [sound]);
-
-
-  const handleSubSoundPress = subSound => {
-    navigation.navigate('PlaySoundScreen', { sound, subSound });
-  };
-
-  // Filter sub-options based on the search query
-  const filteredSubSounds = subSounds.filter(subSound =>
-    subSound.toLowerCase().startsWith(searchQuery.toLowerCase()),
-  );
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.topBar} />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.accountButton}
-          onPress={() => navigation.navigate('Account')}>
-          <Image
-            source={require('../../assets/account.png')}
-            style={styles.button}
-          />
-        </TouchableOpacity>
-
-        <View style={styles.screenTitle}>
-          <Text style={styles.screenTitleText}>
-            {sound.split('_').map(word => {
-              return word[0].toUpperCase() + word.slice(1);
-            }).join(' ')
-            }
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={styles.homeButton}
-          onPress={() => navigation.navigate('Home')}>
-          <Image
-            source={require('../../assets/home.png')}
-            style={styles.button}
-          />
-        </TouchableOpacity>
-      </View>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search Sounds"
-        value={searchQuery}
-        onChangeText={text => setSearchQuery(text)}
-      />
-      {!loading ? (
-        <ScrollView
-          style={{ padding: 10, overflow: 'scroll', marginBottom: 100 }}>
-          {filteredSubSounds.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.subSoundButton}
-              onPress={() => handleSubSoundPress(item)}>
-              <Text style={styles.soundText}>
-                {item.split('_').map(word => {
-                  return word[0].toUpperCase() + word.slice(1);
-                }).join(' ')}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      ) : (
-        <View>
-          <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      )}
     </View>
   );
 };
