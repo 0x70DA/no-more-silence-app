@@ -10,8 +10,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import TrackPlayer, { usePlaybackState, useTrackPlayerEvents, State } from 'react-native-track-player';
-import ProgressBar from 'react-native-progress/Bar'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ProgressBar from 'react-native-progress/Bar'
+import Icon from 'react-native-vector-icons/Ionicons';
 import files from '../../assets/sounds/index';
 
 const SoundPracticeStack = createNativeStackNavigator();
@@ -157,8 +158,6 @@ const PlaySoundScreen = ({ route, navigation }) => {
         break;
       }
     }
-
-    // setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -263,7 +262,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
           </View>
 
           <View style={styles.progressBarContainer}>
-            <ProgressBar progress={progress / 100} borderWidth={0} width={null} color={'#052E45'} unfilledColor={'#999993'} />
+            <ProgressBar progress={progress / 100} borderWidth={0} width={null} height={8} color={'#052E45'} unfilledColor={'#999993'} />
           </View>
 
           <Text style={styles.progressBarText}>
@@ -272,8 +271,8 @@ const PlaySoundScreen = ({ route, navigation }) => {
             {formatTime(duration)}
           </Text>
 
-          <TouchableOpacity style={styles.button} onPress={handlePlayPause}>
-            <Text style={styles.buttonText}>{isPlaying ? 'Pause' : 'Play'}</Text>
+          <TouchableOpacity style={styles.playButton} onPress={handlePlayPause}>
+            <Icon name={isPlaying ? 'pause-circle-sharp' : 'play-circle-sharp'} size={60} color="black" />
           </TouchableOpacity>
         </View>
       ) : (
@@ -397,6 +396,10 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginHorizontal: -15,
   },
+  playButton: {
+    alignSelf: 'center',
+    paddingTop: 20,
+  },
   progressBarContainer: {
     width: 350,
     paddingTop: 20,
@@ -404,8 +407,9 @@ const styles = StyleSheet.create({
   },
   progressBarText: {
     textAlign: 'center',
-    paddingTop: 10,
+    paddingTop: 15,
     color: 'black',
+    fontSize: 18,
   },
 });
 
