@@ -236,6 +236,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   accountButton: {
+    borderRadius: 10,
     backgroundColor: '#D9D9D9',
     left: 10,
     top: 15,
@@ -253,10 +254,12 @@ const styles = StyleSheet.create({
   },
   homeButton: {
     backgroundColor: '#D9D9D9',
+    borderRadius: 10,
     right: 10,
     top: 15,
   },
   soundTitleContainer: {
+    borderRadius: 10,
     backgroundColor: '#D9D9D9',
     width: 350,
     height: 50,

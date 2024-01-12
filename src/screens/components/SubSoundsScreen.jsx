@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
   },
   accountButton: {
     backgroundColor: '#D9D9D9',
+    borderRadius: 10,
     left: 10,
     top: 15,
   },
@@ -140,6 +141,7 @@ const styles = StyleSheet.create({
   },
   homeButton: {
     backgroundColor: '#D9D9D9',
+    borderRadius: 10,
     right: 10,
     top: 15,
   },
@@ -161,6 +163,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
     backgroundColor: '#D9D9D9',
+    borderRadius: 10,
     width: 351,
     height: 73,
   },

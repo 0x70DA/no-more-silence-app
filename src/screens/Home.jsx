@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
   },
   accountButton: {
     backgroundColor: '#D9D9D9',
+    borderRadius: 10,
     left: 10,
     top: 15,
   },
@@ -147,11 +148,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   homeButton: {
+    borderRadius: 10,
     backgroundColor: '#D9D9D9',
     right: 10,
     top: 15,
   },
   identificationButton: {
+    borderRadius: 10,
     backgroundColor: '#052E45',
     width: 236,
     height: 72,
@@ -160,6 +163,7 @@ const styles = StyleSheet.create({
     left: 145,
   },
   practiceButton: {
+    borderRadius: 10,
     backgroundColor: '#052E45',
     width: 268,
     height: 72,
@@ -168,6 +172,7 @@ const styles = StyleSheet.create({
     left: 11,
   },
   auditoryButton: {
+    borderRadius: 10,
     backgroundColor: '#052E45',
     width: 297,
     height: 83,

@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   },
   accountButton: {
     backgroundColor: '#D9D9D9',
+    borderRadius: 10,
     left: 10,
     top: 15,
   },
@@ -108,11 +109,13 @@ const styles = StyleSheet.create({
   homeButton: {
     backgroundColor: '#D9D9D9',
     right: 10,
+    borderRadius: 10,
     top: 15,
   },
   soundButton: {
     padding: 10,
     marginVertical: 10,
+    borderRadius: 10,
     backgroundColor: '#D9D9D9',
     width: 351,
     height: 73,
