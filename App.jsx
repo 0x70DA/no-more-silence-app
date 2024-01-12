@@ -2,7 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import Welcome from './src/screens/Welcome';
-import Note from './src/screens/Note';
+import WelcomeMessage from './src/screens/WelcomeMessage';
 import Login from './src/screens/Login';
 import Home from './src/screens/Home';
 import Account from './src/screens/Account';
@@ -75,8 +75,8 @@ export default function App() {
               options={{headerShown: false}}
             />
             <stack.Screen
-              name="Note"
-              component={Note}
+              name="WelcomeMessage"
+              component={WelcomeMessage}
               options={{headerShown: false}}
             />
             <stack.Screen

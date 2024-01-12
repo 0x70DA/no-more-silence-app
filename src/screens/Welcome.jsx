@@ -7,7 +7,7 @@ const Welcome = ({navigation}) => {
         <Image source={require('../../assets/welcome.png')} style={styles.image} resizeMode="cover"/>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Note')}>
+        onPress={() => navigation.navigate('WelcomeMessage')}>
         <Text style={styles.text}>get started</Text>
       </TouchableOpacity>
     </View>

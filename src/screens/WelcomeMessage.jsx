@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-const Note = ({navigation}) => {
+const WelcomeMessage = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.backgroundContainer}>
@@ -98,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Note;
+export default WelcomeMessage;
