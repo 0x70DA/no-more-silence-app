@@ -5,6 +5,7 @@ import Welcome from './src/screens/Welcome';
 import WelcomeMessage from './src/screens/WelcomeMessage';
 import Login from './src/screens/Login';
 import Home from './src/screens/Home';
+import Notes from './src/screens/Notes';
 import Account from './src/screens/Account';
 import SoundIdentification from './src/screens/SoundIdentification';
 import SoundPractice from './src/screens/SoundPractice';
@@ -18,10 +19,15 @@ const InsideStack = createNativeStackNavigator();
 
 function InsideLayout() {
   return (
-    <InsideStack.Navigator>
+    <InsideStack.Navigator initialRouteName='Notes'>
       <InsideStack.Screen
         name="Home"
         component={Home}
+        options={{headerShown: false}}
+      />
+      <InsideStack.Screen
+        name="Notes"
+        component={Notes}
         options={{headerShown: false}}
       />
       <InsideStack.Screen
@@ -53,7 +59,6 @@ export default function App() {
 
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, user => {
-      console.log('user', user);
       setUser(user);
     });
   }, []);
