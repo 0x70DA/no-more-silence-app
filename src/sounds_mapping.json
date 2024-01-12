@@ -1,6 +1,18 @@
 {
   "animal_and_insects_sounds": [
     {
+      "bee": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
       "bird": {
         "images": [
           "img_1.jpeg",
@@ -61,7 +73,31 @@
       }
     },
     {
+      "cricket": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
       "crow": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "deer": {
         "images": [
           "img_1.jpeg",
           "img_2.jpeg",
@@ -179,6 +215,18 @@
       }
     },
     {
+      "hippo": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
       "horse": {
         "images": [
           "img_1.jpeg",
@@ -193,7 +241,43 @@
     {
       "lion": {
         "images": [
-          "img_1.png",
+          "img_1.jpg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "monkey": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "mosquito": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "owl": {
+        "images": [
+          "img_1.jpeg",
           "img_2.jpeg",
           "img_3.jpeg"
         ],
@@ -208,6 +292,30 @@
           "img_1.jpg",
           "img_2.jpg",
           "img_3.jpg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "penguin": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "pig": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
         ],
         "audio": [
           "audio.mp3"
@@ -239,11 +347,59 @@
       }
     },
     {
+      "snake": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "squirrel": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "whale": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
       "Wolf": {
         "images": [
           "img_1.jpg",
           "img_2.jpg",
           "img_3.jpg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "wood_pecker": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
         ],
         "audio": [
           "audio.mp3"
@@ -286,6 +442,16 @@
         "audio": [
           "audio.mp3"
         ]
+      }
+    },
+    {
+      "dish_washer": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": []
       }
     },
     {
@@ -337,6 +503,18 @@
       }
     },
     {
+      "lawn_mower": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
       "Microwave": {
         "images": [
           "img_1.jpeg",
@@ -374,6 +552,18 @@
     }
   ],
   "human_sounds": [
+    {
+      "breathing": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
     {
       "clapping": {
         "images": [
@@ -464,6 +654,30 @@
           "img_1.jpg",
           "img_2.jpg",
           "img_3.jpg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "heartbeat": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "knuckle_cracking": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
         ],
         "audio": [
           "audio.mp3"
@@ -591,6 +805,18 @@
       }
     },
     {
+      "waterfall": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
       "wind_blowing": {
         "images": [
           "img_1.jpeg",
@@ -629,11 +855,35 @@
       }
     },
     {
+      "basket_ball_bouncing": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
       "bomb": {
         "images": [
           "img_1.jpg",
           "img_2.jpg",
           "img_3.jpg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "chair_scraping": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
         ],
         "audio": [
           "audio.mp3"
@@ -678,6 +928,30 @@
     },
     {
       "computer_mouse": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "construction_sounds": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "Door_creaking": {
         "images": [
           "img_1.jpeg",
           "img_2.jpeg",
@@ -740,6 +1014,18 @@
           "img_1.jpeg",
           "img_2.jpeg",
           "img_3.jpg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "fireworks": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
         ],
         "audio": [
           "audio.mp3"
@@ -902,6 +1188,18 @@
       }
     },
     {
+      "nail_hammering": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
       "opening_the_door": {
         "images": [
           "img_1.jpg",
@@ -943,6 +1241,18 @@
           "img_1.jpg",
           "img_2.jpg",
           "img_3.jpg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "plastic_bag_crinkle": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
         ],
         "audio": [
           "audio.mp3"
@@ -1003,6 +1313,18 @@
           "img_1.jpg",
           "img_2.jpg",
           "img_3.jpg"
+        ],
+        "audio": [
+          "audio.mp3"
+        ]
+      }
+    },
+    {
+      "skiing": {
+        "images": [
+          "img_1.jpeg",
+          "img_2.jpeg",
+          "img_3.jpeg"
         ],
         "audio": [
           "audio.mp3"
