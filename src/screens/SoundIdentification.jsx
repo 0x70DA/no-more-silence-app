@@ -35,19 +35,19 @@ const IdentificationType = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 50 }}>
-        <Text>Identification Type</Text>
-        <TouchableOpacity onPress={() => {
+      <View style={styles.optionsContainer}>
+        <TouchableOpacity style={styles.option} onPress={() => {
           identificationType = 'existence';
           navigation.navigate('SoundsScreen');
         }}>
-          <Text>Existence of Sound</Text>
+          <Text style={styles.optionText}>Existence of Sound</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
+
+        <TouchableOpacity style={styles.option} onPress={() => {
           identificationType = 'direction';
           navigation.navigate('SoundsScreen');
         }}>
-          <Text>Direction of Sound</Text>
+          <Text style={styles.optionText}>Direction of Sound</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   accountButton: {
+    borderRadius: 10,
     backgroundColor: '#D9D9D9',
     left: 10,
     top: 15,
@@ -125,6 +126,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   homeButton: {
+    borderRadius: 10,
     backgroundColor: '#D9D9D9',
     right: 10,
     top: 15,
@@ -133,6 +135,27 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  optionsContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 50
+  },
+  option: {
+    backgroundColor: '#052E45',
+    width: 300,
+    height: 60,
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  optionText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'white',
   },
 });
 
