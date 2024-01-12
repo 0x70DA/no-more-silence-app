@@ -181,15 +181,21 @@ const PlaySoundScreen = ({ route, navigation }) => {
             </View>
           )}
           {identificationType === 'direction' &&
-            <View style={{ marginTop: 25 }}>
-              <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'black' }}>
-                Direction of Sound
+            <View style={styles.noteContainer}>
+              <Text style={styles.noteText}>
+                keep changing the direction of  the
+                sound: right and left , near or far and
+                ask your child if they can identify the direction, after your child guess correctly for 7-10 answers out of ten right you can move to the next phase
               </Text>
             </View>}
           {identificationType === 'existence' &&
-            <View style={{ marginTop: 25 }}>
-              <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'black' }}>
-                Existence of Sound
+            <View style={styles.noteContainer}>
+              <Text style={styles.noteText}>
+                keep playing and stoping
+                the sound, ask your child
+                if they can identify if the
+                sound exist or not after
+                your child can guess coreclty for 7-10 answers out of ten right you can move to the next phase
               </Text>
             </View>}
         </View>
@@ -298,7 +304,7 @@ const styles = StyleSheet.create({
     height: 50,
     resizeMode: 'contain',
     position: 'relative',
-    marginHorizontal: -15,
+    marginHorizontal: -5,
   },
   playButton: {
     alignSelf: 'center',
@@ -314,6 +320,20 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     color: 'black',
     fontSize: 18,
+  },
+  noteContainer: {
+    marginTop: 10,
+    backgroundColor: '#E3EFFA',
+    width: '100%',
+    height: 150,
+    padding: 10,
+    justifyContent: 'center',
+  },
+  noteText: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
   },
 });
 
