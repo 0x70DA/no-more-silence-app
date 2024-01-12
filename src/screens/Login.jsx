@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
-import {FIREBASE_AUTH} from '../../FirebaseConfig';
+import React, { useState } from 'react';
+import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithCredential
 } from 'firebase/auth';
+import { GoogleSignin } from 'react-native-google-signin';
 import {
   View,
   Text,
@@ -21,6 +24,25 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
+
+  GoogleSignin.configure({
+    webClientId: '149797427120-2pa9be7ct0lc2gh8jj3l5cq0rgevr481.apps.googleusercontent.com',
+  });
+
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      const userInfo = await GoogleSignin.signIn();
+      // Create a credential with the Google ID token
+      const credential = GoogleAuthProvider.credential(userInfo.idToken);
+      // Sign in with Firebase using the credential
+      await signInWithCredential(auth, credential);
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+    }
+    setLoading(false);
+  };
+
 
   const signIn = async () => {
     setLoading(true);
@@ -63,9 +85,8 @@ const Login = () => {
             <View style={styles.signUpTextContainer}>
               <Text style={styles.signUpText}>Login/Sign Up</Text>
             </View>
-            {/* TODO */}
-            <TouchableOpacity style={styles.googleButton}>
-              <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
+              <View style={{ flexDirection: 'row' }}>
                 <Text style={styles.buttonText}>continue with google</Text>
                 <Image
                   source={require('../../assets/google_icon.png')}
@@ -80,7 +101,7 @@ const Login = () => {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.facebookButton}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Text style={styles.buttonText}>continue with facebook</Text>
                 <Image
                   source={require('../../assets/facebook_icon.png')}
@@ -118,7 +139,9 @@ const Login = () => {
             </View>
 
             {loading ? (
-              <ActivityIndicator size="large" color="#0000ff" />
+              <View style={styles.loading}>
+                <ActivityIndicator size="45" color="#052E45" />
+              </View>
             ) : (
               <View>
                 <TouchableOpacity style={styles.signUpButton} onPress={signUp}>
@@ -284,6 +307,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontWeight: '800',
     lineHeight: 30,
+  },
+  loading: {
+    position: 'absolute',
+    left: 180,
+    top: 654,
   },
 });
 
