@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Linking } from 'react-native';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Account = ({ navigation }) => {
   const handleFormLinkPress = () => {
@@ -10,19 +11,21 @@ const Account = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topBar} />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.accountButton} disabled={true}>
-          <Image source={require('../../assets/account.png')} style={styles.button} />
+      <View style={styles.topBar}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={30} color="white" />
         </TouchableOpacity>
-
         <View style={styles.screenTitle}>
           <Text style={styles.screenTitleText}>Account</Text>
         </View>
-
-        <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
-          <Image source={require('../../assets/home.png')} style={styles.button} />
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={[styles.accountButton, {marginRight: 30}]} disabled={true}>
+            <Image source={require('../../assets/account.png')} style={styles.button} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
+            <Image source={require('../../assets/home.png')} style={styles.button} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.contactContainer}>
@@ -52,18 +55,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
     height: 72,
     backgroundColor: '#052E45',
     position: 'absolute',
     top: 0,
     left: 0,
+    paddingHorizontal: 10,
+    zIndex: 1,
+  },
+  backButton: {
+    padding: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
-    position: 'absolute',
-    top: 0,
-    left: 0,
+    justifyContent: 'space-between',
+    position: 'relative',
+    marginRight: -10,
+    top: -15,
     zIndex: 1,
   },
   button: {
@@ -78,15 +90,15 @@ const styles = StyleSheet.create({
     top: 15,
   },
   screenTitle: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    top: 15,
+    marginRight: -40,
   },
   screenTitleText: {
     color: 'white',
     fontSize: 21,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   homeButton: {
     borderRadius: 10,
