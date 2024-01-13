@@ -13,7 +13,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
   ScrollView,
   ActivityIndicator,
   Image,
@@ -48,9 +47,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
     } catch (err) {
-      console.log(err);
       alert('Login Failed: ' + err.message);
     } finally {
       setLoading(false);
@@ -60,15 +57,9 @@ const Login = () => {
   const signUp = async () => {
     setLoading(true);
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      console.log(response);
+      const response = await createUserWithEmailAndPassword(auth, email, password);
       alert('Sign Up Success!');
     } catch (err) {
-      console.log(err);
       alert('Sign Up Failed: ' + err.message);
     } finally {
       setLoading(false);
@@ -77,84 +68,67 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView behavior="padding">
-        <ScrollView>
-          <View style={styles.backgroundContainer}>
-            <View style={styles.blueRectangle} />
+      <ScrollView>
+        <View style={styles.backgroundContainer}>
+          <View style={styles.blueRectangle} />
 
-            <View style={styles.signUpTextContainer}>
-              <Text style={styles.signUpText}>Login/Sign Up</Text>
-            </View>
-            <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.buttonText}>continue with google</Text>
-                <Image
-                  source={require('../../assets/google_icon.png')}
-                  style={{
-                    width: 37,
-                    height: 36,
-                    position: 'relative',
-                    left: 35,
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.facebookButton}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.buttonText}>continue with facebook</Text>
-                <Image
-                  source={require('../../assets/facebook_icon.png')}
-                  style={{
-                    width: 61,
-                    height: 36,
-                    position: 'relative',
-                    left: 24,
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-            {/* TODO */}
-            <View style={styles.orContainer}>
-              <Text style={styles.orText}>or</Text>
-            </View>
-
-            <View style={styles.emailTextContainer}>
-              <Text style={styles.emailText}>Email</Text>
-              <TextInput
-                value={email}
-                style={styles.emailInput}
-                autoCapitalize="none"
-                onChangeText={text => setEmail(text)}></TextInput>
-            </View>
-
-            <View style={styles.passwordTextContainer}>
-              <Text style={styles.passwordText}>Password</Text>
-              <TextInput
-                value={password}
-                style={styles.passwordInput}
-                autoCapitalize="none"
-                secureTextEntry={true}
-                onChangeText={text => setPassword(text)}></TextInput>
-            </View>
-
-            {loading ? (
-              <View style={styles.loading}>
-                <ActivityIndicator size="45" color="#052E45" />
-              </View>
-            ) : (
-              <View>
-                <TouchableOpacity style={styles.signUpButton} onPress={signUp}>
-                  <Text style={styles.buttonText}>sign up</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.loginButton} onPress={signIn}>
-                  <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+          <View style={styles.signUpTextContainer}>
+            <Text style={styles.signUpText}>Login/Sign Up</Text>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.buttonText}>continue with google</Text>
+              <Image
+                source={require('../../assets/google_icon.png')}
+                style={{
+                  width: 37,
+                  height: 36,
+                  position: 'relative',
+                  left: 35,
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.orContainer}>
+            <Text style={styles.orText}>or</Text>
+          </View>
+
+          <View style={styles.emailTextContainer}>
+            <Text style={styles.emailText}>Email</Text>
+            <TextInput
+              value={email}
+              style={styles.emailInput}
+              autoCapitalize="none"
+              onChangeText={text => setEmail(text)}></TextInput>
+          </View>
+
+          <View style={styles.passwordTextContainer}>
+            <Text style={styles.passwordText}>Password</Text>
+            <TextInput
+              value={password}
+              style={styles.passwordInput}
+              autoCapitalize="none"
+              secureTextEntry={true}
+              onChangeText={text => setPassword(text)}></TextInput>
+          </View>
+
+          {loading ? (
+            <View style={styles.loading}>
+              <ActivityIndicator size="45" color="#052E45" />
+            </View>
+          ) : (
+            <View>
+              <TouchableOpacity style={styles.signUpButton} onPress={signUp}>
+                <Text style={styles.buttonText}>sign up</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.loginButton} onPress={signIn}>
+                <Text style={styles.buttonText}>Login</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -164,11 +138,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   backgroundContainer: {
     width: 429,
-    height: 926,
-    backgroundColor: 'white',
+    height: 800,
     position: 'relative',
   },
   blueRectangle: {
@@ -226,7 +200,7 @@ const styles = StyleSheet.create({
   orContainer: {
     position: 'absolute',
     left: 196,
-    top: 421,
+    top: 380,
   },
   orText: {
     color: 'black',
