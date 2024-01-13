@@ -6,7 +6,9 @@
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
-      android:roundIcon="@mipmap/ic_launcher_round"
+      android:roundIcon="@mipmap/ic_launcher"
+      android:background="@mipmap/ic_launcher_background"
+      android:foreground="@mipmap/ic_launcher_foreground"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <activity
