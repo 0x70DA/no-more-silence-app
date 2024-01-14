@@ -165,10 +165,10 @@ const AuditoryDiscrimination = ({ navigation }) => {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.accountButton, { marginRight: 30 }]} onPress={() => navigation.navigate('Account')}>
-            <Image source={require('../../assets/account.png')} style={styles.button} />
+            <Icon name="person" size={30} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
-            <Image source={require('../../assets/home.png')} style={styles.button} />
+          <TouchableOpacity style={styles.homeButton} >
+            <Icon name="home" size={30} color="white" onPress={() => navigation.navigate('Home')} />
           </TouchableOpacity>
         </View>
       </View>
@@ -249,16 +249,10 @@ const styles = StyleSheet.create({
     top: -15,
     zIndex: 1,
   },
-  button: {
-    width: 55,
-    height: 45,
-    resizeMode: 'contain',
-  },
   accountButton: {
-    backgroundColor: '#D9D9D9',
-    borderRadius: 10,
-    left: 10,
-    top: 15,
+    left: 15,
+    top: 25,
+    position: 'relative',
   },
   screenTitle: {
     justifyContent: 'center',
@@ -267,15 +261,15 @@ const styles = StyleSheet.create({
   },
   screenTitleText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: 21,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   homeButton: {
-    borderRadius: 10,
-    backgroundColor: '#D9D9D9',
     right: 10,
     top: 15,
+    position: 'relative',
+    padding: 10,
   },
   playButton: {
     alignSelf: 'center',

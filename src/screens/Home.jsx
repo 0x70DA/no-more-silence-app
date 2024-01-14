@@ -13,11 +13,11 @@ const Home = ({ navigation }) => {
           <Text style={styles.screenTitleText}>Home Page</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.accountButton, {marginRight: 30}]} onPress={() => navigation.navigate('Account')}>
-            <Image source={require('../../assets/account.png')} style={styles.button} />
+          <TouchableOpacity style={[styles.accountButton, { marginRight: 30 }]} onPress={() => navigation.navigate('Account')}>
+            <Icon name="person" size={30} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.homeButton} disabled={true}>
-            <Image source={require('../../assets/home.png')} style={styles.button} />
+          <TouchableOpacity style={styles.homeButton} >
+            <Icon name="home" size={30} color="white" disabled={true}/>
           </TouchableOpacity>
         </View>
       </View>
@@ -128,16 +128,10 @@ const styles = StyleSheet.create({
     top: -15,
     zIndex: 1,
   },
-  button: {
-    width: 55,
-    height: 45,
-    resizeMode: 'contain',
-  },
   accountButton: {
-    backgroundColor: '#D9D9D9',
-    borderRadius: 10,
     left: 10,
-    top: 15,
+    top: 25,
+    position: 'relative',
   },
   screenTitle: {
     justifyContent: 'center',
@@ -151,10 +145,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   homeButton: {
-    borderRadius: 10,
-    backgroundColor: '#D9D9D9',
     right: 10,
     top: 15,
+    position: 'relative',
+    padding: 10
   },
   identificationButton: {
     borderRadius: 10,

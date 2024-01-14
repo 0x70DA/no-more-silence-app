@@ -1,6 +1,6 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useEffect, useState} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
 import Welcome from './src/screens/Welcome';
 import WelcomeMessage from './src/screens/WelcomeMessage';
 import Login from './src/screens/Login';
@@ -10,8 +10,8 @@ import Account from './src/screens/Account';
 import SoundIdentification from './src/screens/SoundIdentification';
 import SoundPractice from './src/screens/SoundPractice';
 import AuditoryDiscrimination from './src/screens/AuditoryDiscrimination';
-import {onAuthStateChanged} from 'firebase/auth';
-import {FIREBASE_AUTH} from './FirebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
+import { FIREBASE_AUTH } from './FirebaseConfig';
 
 const stack = createNativeStackNavigator();
 
@@ -23,32 +23,32 @@ function InsideLayout() {
       <InsideStack.Screen
         name="Home"
         component={Home}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <InsideStack.Screen
         name="Notes"
         component={Notes}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <InsideStack.Screen
         name="Account"
         component={Account}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <InsideStack.Screen
         name="SoundIdentification"
         component={SoundIdentification}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <InsideStack.Screen
         name="SoundPractice"
         component={SoundPractice}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <InsideStack.Screen
         name="AuditoryDiscrimination"
         component={AuditoryDiscrimination}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </InsideStack.Navigator>
   );
@@ -70,24 +70,24 @@ export default function App() {
           <stack.Screen
             name="Inside"
             component={InsideLayout}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
         ) : (
           <stack.Group initialRouteName="Welcome">
             <stack.Screen
               name="Welcome"
               component={Welcome}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <stack.Screen
               name="WelcomeMessage"
               component={WelcomeMessage}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <stack.Screen
               name="Login"
               component={Login}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
           </stack.Group>
         )}
