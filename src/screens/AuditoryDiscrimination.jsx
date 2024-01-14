@@ -6,6 +6,7 @@ import TrackPlayer, { State } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ProgressBar from 'react-native-progress/Bar';
 import files from '../../assets/auditory';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const questionsMapping = require('../questions_mapping.json');
@@ -21,6 +22,23 @@ const AuditoryDiscrimination = ({ navigation }) => {
   const [score, setScore] = useState(0);
   const [firstTry, setFirstTry] = useState(false);
   const playbackState = usePlaybackState();
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
 
   useEffect(() => {
     getNextQuestion();
@@ -161,7 +179,7 @@ const AuditoryDiscrimination = ({ navigation }) => {
           <Icon name="arrow-back" size={30} color="white" />
         </TouchableOpacity>
         <View style={styles.screenTitle}>
-          <Text style={styles.screenTitleText}>Auditory Discrimination{'\n'}Activity</Text>
+          <Text style={styles.screenTitleText}>{language === 'en' ? 'Auditory Discrimination\nActivity' : 'نشاط التمييز\nالسمعي'}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.accountButton, { marginRight: 30 }]} onPress={() => navigation.navigate('Account')}>
@@ -181,11 +199,12 @@ const AuditoryDiscrimination = ({ navigation }) => {
         <View style={{ flex: 1, position: 'relative' }}>
           <View style={styles.statsContainer}>
             <Text style={styles.statsText}>
-              {`Score: ${score}`}/{Object.keys(questionsMapping).length}
+              {language === 'en' ? 'Score' : 'الدرجة'}{`: ${score}`}/{Object.keys(questionsMapping).length}
             </Text>
             <Text style={styles.statsText}>
-              Remaining Questions: {allQuestions.length}
+              {language === 'en' ? 'Remaining Questions' : 'الأسئلة المتبقية'}: {allQuestions.length}
             </Text>
+            <Text style={[styles.statsText, { top: 40 }]}>{language === 'en' ? 'Select the correct image:' : 'اختر الصورة الصحيحة:'}</Text>
           </View>
 
           {imagePairs.length > 0 && (

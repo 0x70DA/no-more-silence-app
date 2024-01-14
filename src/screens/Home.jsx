@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({ navigation }) => {
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -10,14 +28,14 @@ const Home = ({ navigation }) => {
           <Icon name="arrow-back" size={30} color="white" />
         </TouchableOpacity>
         <View style={styles.screenTitle}>
-          <Text style={styles.screenTitleText}>Home Page</Text>
+          <Text style={styles.screenTitleText}>{language === 'en' ? 'Home Page' : 'الصفحة الرئيسية'}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.accountButton, { marginRight: 30 }]} onPress={() => navigation.navigate('Account')}>
             <Icon name="person" size={30} color="white" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.homeButton} >
-            <Icon name="home" size={30} color="white" disabled={true}/>
+            <Icon name="home" size={30} color="white" disabled={true} />
           </TouchableOpacity>
         </View>
       </View>
@@ -36,7 +54,7 @@ const Home = ({ navigation }) => {
         style={styles.identificationButton}
         onPress={() => navigation.navigate('SoundIdentification')}>
         <View style={{ flexDirection: 'row', marginTop: 4 }}>
-          <Text style={styles.buttonText}>sound{'\n'}identification</Text>
+          <Text style={styles.buttonText}>{language === 'en' ? 'Sound\nIdentification' : 'التعرف\nعلى الصوت'}</Text>
           <Image
             source={require('../../assets/sound_identification.png')}
             style={{ width: 62, height: 70, position: 'absolute', right: 0 }}
@@ -58,7 +76,7 @@ const Home = ({ navigation }) => {
         style={styles.practiceButton}
         onPress={() => navigation.navigate('SoundPractice')}>
         <View style={{ flexDirection: 'row', marginTop: 4 }}>
-          <Text style={styles.buttonText}>differnet sound{'\n'}practice</Text>
+          <Text style={styles.buttonText}>{language === 'en' ? 'Different Sound\nPractice' : 'التدريب على أصوات\nمختلفة'}</Text>
           <Image
             source={require('../../assets/sound_practice.png')}
             style={{ width: 44, height: 62, position: 'absolute', right: 10 }}
@@ -81,7 +99,7 @@ const Home = ({ navigation }) => {
         onPress={() => navigation.navigate('AuditoryDiscrimination')}>
         <View style={{ flexDirection: 'row', marginTop: 4 }}>
           <Text style={styles.buttonText}>
-            auditory discrimination activity
+            {language === 'en' ? 'Auditory Discrimination Activity' : '\nنشاط التمييز السمعي'}
           </Text>
           <Image
             source={require('../../assets/auditory.png')}
@@ -180,7 +198,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFF',
     fontFamily: 'Inter',
-    fontStyle: 'italic',
     fontSize: 24,
     fontWeight: '800',
     marginLeft: 20,

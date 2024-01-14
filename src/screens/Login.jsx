@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import {
   signInWithEmailAndPassword,
@@ -17,8 +17,28 @@ import {
   ActivityIndicator,
   Image,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Login = () => {
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -73,7 +93,7 @@ const Login = () => {
           <View style={styles.blueRectangle} />
 
           <View style={styles.signUpTextContainer}>
-            <Text style={styles.signUpText}>Login/Sign Up</Text>
+            <Text style={styles.signUpText}>{language==='en' ? 'Login / Sign Up' : 'التسجيل / الدخول'}</Text>
           </View>
           <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
             <View style={{ flexDirection: 'row' }}>
@@ -91,11 +111,11 @@ const Login = () => {
           </TouchableOpacity>
 
           <View style={styles.orContainer}>
-            <Text style={styles.orText}>or</Text>
+            <Text style={styles.orText}>{language==='en' ? 'or' : 'أو'}</Text>
           </View>
 
           <View style={styles.emailTextContainer}>
-            <Text style={styles.emailText}>Email</Text>
+            <Text style={styles.emailText}>{language==='en' ? 'Email' : 'الإيميل'}</Text>
             <TextInput
               value={email}
               style={styles.emailInput}
@@ -104,7 +124,7 @@ const Login = () => {
           </View>
 
           <View style={styles.passwordTextContainer}>
-            <Text style={styles.passwordText}>Password</Text>
+            <Text style={styles.passwordText}>{language==='en' ? 'Password' : 'كلمة المرور'}</Text>
             <TextInput
               value={password}
               style={styles.passwordInput}
@@ -120,10 +140,10 @@ const Login = () => {
           ) : (
             <View>
               <TouchableOpacity style={styles.signUpButton} onPress={signUp}>
-                <Text style={styles.buttonText}>sign up</Text>
+                <Text style={styles.buttonText}>{language==='en' ? 'Sign Up' : 'التسجيل'}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.loginButton} onPress={signIn}>
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>{language==='en' ? 'Login' : 'الدخول'}</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -162,7 +182,6 @@ const styles = StyleSheet.create({
   signUpText: {
     color: 'black',
     fontSize: 24,
-    fontStyle: 'italic',
     fontFamily: 'Inter',
     fontWeight: '800',
     lineHeight: 30,
@@ -192,7 +211,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 20,
-    fontStyle: 'italic',
     fontFamily: 'Inter',
     fontWeight: '800',
     lineHeight: 30,
@@ -205,7 +223,6 @@ const styles = StyleSheet.create({
   orText: {
     color: 'black',
     fontSize: 24,
-    fontStyle: 'italic',
     fontFamily: 'Inter',
     fontWeight: '800',
     lineHeight: 30,
@@ -218,7 +235,6 @@ const styles = StyleSheet.create({
   emailText: {
     color: 'black',
     fontSize: 24,
-    fontStyle: 'italic',
     fontFamily: 'Inter',
     fontWeight: '800',
     lineHeight: 30,
@@ -231,7 +247,6 @@ const styles = StyleSheet.create({
   passwordText: {
     color: 'black',
     fontSize: 24,
-    fontStyle: 'italic',
     fontFamily: 'Inter',
     fontWeight: '800',
     lineHeight: 30,
@@ -277,7 +292,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 20,
-    fontStyle: 'italic',
     fontFamily: 'Inter',
     fontWeight: '800',
     lineHeight: 30,

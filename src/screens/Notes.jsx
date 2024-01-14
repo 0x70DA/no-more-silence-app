@@ -1,8 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const en = require('../locales/en/notes.json');
+const ar = require('../locales/ar/notes.json');
 
 const Notes = ({ navigation }) => {
+  const [language, setLanguage] = useState('en');
+  const [text, setText] = useState(en);
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+          setText(lang === 'en' ? en : ar);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.backgroundContainer}>
@@ -10,11 +34,7 @@ const Notes = ({ navigation }) => {
         <View style={styles.oval2} />
         <View style={styles.centeredContainer}>
           <View style={styles.textContainer}>
-            {[
-              "This application is made for cochlear implant kids, any other condition as autism will need another auditory rehabilitation style.",
-              "If you-as a parent- has the object in your home, it is better to show it to your kid instead of watching videos and images",
-              "Repeat the voices with your kid , try to lower / higher the voice, moving it around in several direction which will help in a better experience.",
-            ].map((text, index) => (
+            {text.notes.map((text, index) => (
               <View key={index} style={styles.row}>
                 <Icon name="angle-double-right" size={28} color="black" style={styles.icon} />
                 <Text style={styles.text}>{text}</Text>
@@ -24,7 +44,7 @@ const Notes = ({ navigation }) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate('Home')}>
-            <Text style={styles.buttonText}>got it</Text>
+            <Text style={styles.buttonText}>{language === 'en' ? 'Got It' : 'فهمت'}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -74,7 +94,6 @@ const styles = StyleSheet.create({
   text: {
     color: 'black',
     fontSize: 21,
-    fontStyle: 'italic',
     fontWeight: 'bold',
     fontFamily: 'Inter',
     lineHeight: 30,

@@ -1,15 +1,34 @@
-import React from 'react';
-import { Text, TouchableOpacity, View, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import SoundsScreen from './components/SoundsScreen';
 import SubSoundsScreen from './components/SubSoundsScreen';
 import PlaySoundScreen from './components/PlaySoundScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 let identificationType;
 
 const IdentificationType = ({ navigation }) => {
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -17,7 +36,7 @@ const IdentificationType = ({ navigation }) => {
           <Icon name="arrow-back" size={30} color="white" />
         </TouchableOpacity>
         <View style={styles.screenTitle}>
-          <Text style={styles.screenTitleText}>Sound Identification</Text>
+          <Text style={styles.screenTitleText}>{language === 'en' ? 'Sound Identification' : 'التعرف على الصوت'}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.accountButton, { marginRight: 30 }]} onPress={() => navigation.navigate('Account')}>
@@ -34,14 +53,14 @@ const IdentificationType = ({ navigation }) => {
           identificationType = 'existence';
           navigation.navigate('SoundsScreen');
         }}>
-          <Text style={styles.optionText}>Existence of Sound</Text>
+          <Text style={styles.optionText}>{language === 'en' ? 'Existence of Sound' : 'وجود الصوت'}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.option} onPress={() => {
           identificationType = 'direction';
           navigation.navigate('SoundsScreen');
         }}>
-          <Text style={styles.optionText}>Direction of Sound</Text>
+          <Text style={styles.optionText}>{language === 'en' ? 'Direction of Sound' : 'اتجاه الصوت'}</Text>
         </TouchableOpacity>
       </View>
     </View>

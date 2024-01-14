@@ -5,7 +5,10 @@ import TrackPlayer, { State } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ProgressBar from 'react-native-progress/Bar';
 import files from '../../../assets/sounds';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const en = require('../../locales/en/sounds.json');
+const ar = require('../../locales/ar/sounds.json');
 const soundsMapping = require('../../sounds_mapping.json');
 
 const PlaySoundScreen = ({ route, navigation }) => {
@@ -18,6 +21,25 @@ const PlaySoundScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const playbackState = usePlaybackState();
+  const [language, setLanguage] = useState('en');
+  const [text, setText] = useState(null);
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+          setText(lang === 'en' ? en : ar);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -113,9 +135,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
         </TouchableOpacity>
         <View style={styles.screenTitle}>
           <Text style={styles.screenTitleText}>
-            {sound.split('_').slice(0, -1).map(word => {
-              return word[0].toUpperCase() + word.slice(1);
-            }).join(' ')}{'\n'}Sounds
+            {text && text[sound].split(' ').slice(0, -1).join(' ') + '\n' + text[sound].split(' ').slice(-1)}
           </Text>
         </View>
         <View style={styles.buttonContainer}>
@@ -128,13 +148,11 @@ const PlaySoundScreen = ({ route, navigation }) => {
         </View>
       </View>
 
-      {!loading ? (
+      {!loading && text ? (
         <View style={{ position: 'absolute', top: 90 }}>
           <View style={styles.soundTitleContainer}>
             <Text style={styles.soundTitleText}>
-              {subSound.split('_').map(word => {
-                return word[0].toUpperCase() + word.slice(1);
-              }).join(' ')}
+              {text[subSound]}
             </Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
@@ -152,7 +170,7 @@ const PlaySoundScreen = ({ route, navigation }) => {
           {audio.length === 0 ? (
             <View style={{ marginTop: 25 }}>
               <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'black' }}>
-                No audio file found!
+                {language === 'en' ? 'No audio file found!' : 'لم يتم العثور على ملف صوتي!'}
               </Text>
             </View>
           ) : (
@@ -174,21 +192,11 @@ const PlaySoundScreen = ({ route, navigation }) => {
           )}
           {identificationType === 'direction' &&
             <View style={styles.noteContainer}>
-              <Text style={styles.noteText}>
-                keep changing the direction of  the
-                sound: right and left , near or far and
-                ask your child if they can identify the direction, after your child guess correctly for 7-10 answers out of ten right you can move to the next phase
-              </Text>
+              <Text style={styles.noteText}>{text.directionOfSound}</Text>
             </View>}
           {identificationType === 'existence' &&
             <View style={styles.noteContainer}>
-              <Text style={styles.noteText}>
-                keep playing and stoping
-                the sound, ask your child
-                if they can identify if the
-                sound exist or not after
-                your child can guess coreclty for 7-10 answers out of ten right you can move to the next phase
-              </Text>
+              <Text style={styles.noteText}>{text.existenceOfSound}</Text>
             </View>}
         </View>
       ) : (
@@ -322,7 +330,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#E3EFFA',
     width: '100%',
-    height: 150,
+    height: 155,
     padding: 10,
     justifyContent: 'center',
   },

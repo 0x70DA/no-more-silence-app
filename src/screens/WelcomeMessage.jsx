@@ -1,7 +1,31 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const WelcomeMessage = ({navigation}) => {
+const en = require('../locales/en/welcomeMessage.json');
+const ar = require('../locales/ar/welcomeMessage.json');
+
+const WelcomeMessage = ({ navigation }) => {
+  const [language, setLanguage] = useState('en');
+  const [text, setText] = useState(en);
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+          setText(lang === 'en' ? en : ar);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.backgroundContainer}>
@@ -9,20 +33,14 @@ const WelcomeMessage = ({navigation}) => {
         <View style={styles.oval2} />
         <View style={styles.centeredContainer}>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>
-              hello,{'\n'}our application is made{'\n'}to make communication
-              {'\n'}
-              and speech therapy more{'\n'}accessible at home. by{'\n'}providing
-              a lot of different{'\n'}sounds and illustrating{'\n'}videos and
-              pictures.{'\n'}
-              please make sure that{'\n'}you still need to visit{'\n'}a
-              specialist doctor.{'\n'}
+            <Text style={[styles.text, language === 'ar' && { textAlign: 'right', fontStyle: 'normal' }]}>
+              {text.message}
             </Text>
           </View>
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.buttonText}>got it</Text>
+            <Text style={styles.buttonText}>{language === 'en' ? 'Got It' : 'فهمت'}</Text>
           </TouchableOpacity>
         </View>
       </View>

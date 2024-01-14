@@ -1,9 +1,49 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Linking } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+import { RadioButton } from 'react-native-paper';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const en = require('../locales/en/account.json');
+const ar = require('../locales/ar/account.json');
 
 const Account = ({ navigation }) => {
+  const [language, setLanguage] = useState('en');
+  const [text, setText] = useState(null);
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+          setText(lang === 'en' ? en : ar);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
+
+  const handleLanguageChange = async (lang) => {
+    try {
+      await AsyncStorage.setItem('language', lang);
+      // Reset navigation state to update language
+      const resetAction = CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Notes' }],
+      });
+      navigation.dispatch(resetAction);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const handleFormLinkPress = () => {
     const formUrl = 'https://forms.gle/d4F2Y5STXVhjsHkW8';
     Linking.openURL(formUrl);
@@ -11,40 +51,64 @@ const Account = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topBar}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} color="white" />
-        </TouchableOpacity>
-        <View style={styles.screenTitle}>
-          <Text style={styles.screenTitleText}>Account</Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.accountButton, {marginRight: 30}]} disabled={true}>
-            <Image source={require('../../assets/account.png')} style={styles.button} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
-            <Image source={require('../../assets/home.png')} style={styles.button} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      {text && (
+        <>
+          <View style={styles.topBar}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+              <Icon name="arrow-back" size={30} color="white" />
+            </TouchableOpacity>
+            <View style={styles.screenTitle}>
+              <Text style={styles.screenTitleText}>{text.title}</Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={[styles.accountButton, { marginRight: 30 }]} disabled={true}>
+                <Icon name="person" size={30} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
+                <Icon name="home" size={30} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
 
-      <View style={styles.contactContainer}>
-        <Text style={styles.contactText} selectable={true}>
-          Do not hesitate to contact us if you have any question or feedback at nomoresilence@gmail.com{'\n\n'}Please fell out our feedback{' '}
-          <Text style={{ color: 'blue' }} onPress={handleFormLinkPress}>form</Text>.
-        </Text>
-      </View>
+          <View style={styles.contactContainer}>
+            <Text style={[styles.contactText, language === 'ar' && { textAlign: 'right' }]} selectable={true}>
+              {text.contact}
+              <Text style={{ color: 'blue' }} onPress={handleFormLinkPress}> {text.form}</Text>.
+            </Text>
+          </View>
 
-      <View style={styles.signOutContainer}>
-        <TouchableOpacity style={styles.signOutButton} onPress={() => FIREBASE_AUTH.signOut()}>
-          <Text style={styles.signOutText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
-      
-      <View style={styles.bottomBar} />
-      <View style={styles.copyrightContainer}>
-        <Text style={styles.copyrightText}>Copyright preserved © No More Silence</Text>
-      </View>
+          <View style={styles.selectLangContainer}>
+            <Text style={styles.selectLangText}>{text.select_language}</Text>
+            <View style={styles.radioButtonGroup}>
+              <RadioButton.Item
+                label="English"
+                value="en"
+                color="blue"
+                status={language === 'en' ? 'checked' : 'unchecked'}
+                onPress={() => handleLanguageChange('en')}
+              />
+              <RadioButton.Item
+                label="Arabic/العربية"
+                value="ar"
+                color="blue"
+                status={language === 'ar' ? 'checked' : 'unchecked'}
+                onPress={() => handleLanguageChange('ar')}
+              />
+            </View>
+          </View>
+
+          <View style={styles.signOutContainer}>
+            <TouchableOpacity style={styles.signOutButton} onPress={() => FIREBASE_AUTH.signOut()}>
+              <Text style={styles.signOutText}>{text.logout}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.bottomBar} />
+          <View style={styles.copyrightContainer}>
+            <Text style={styles.copyrightText}>{text.copyright} © No More Silence</Text>
+          </View>
+        </>
+      )}
     </View>
   );
 };
@@ -78,16 +142,10 @@ const styles = StyleSheet.create({
     top: -15,
     zIndex: 1,
   },
-  button: {
-    width: 55,
-    height: 45,
-    resizeMode: 'contain',
-  },
   accountButton: {
-    backgroundColor: '#D9D9D9',
-    borderRadius: 10,
     left: 10,
-    top: 15,
+    top: 25,
+    position: 'relative',
   },
   screenTitle: {
     justifyContent: 'center',
@@ -101,10 +159,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   homeButton: {
-    borderRadius: 10,
-    backgroundColor: '#D9D9D9',
     right: 10,
     top: 15,
+    position: 'relative',
+    padding: 10
   },
   contactContainer: {
     flex: 1,
@@ -161,7 +219,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontSize: 22,
-  }
+  },
+  selectLangContainer: {
+    position: 'absolute',
+    bottom: 300,
+  },
+  selectLangText: {
+    color: 'black',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  radioButtonGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 40,
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
 });
 
 export default Account;

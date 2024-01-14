@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const en = require('../../locales/en/sounds.json');
+const ar = require('../../locales/ar/sounds.json');
 
 const sounds = [
   'animal_and_insects_sounds',
@@ -13,6 +17,25 @@ const sounds = [
 
 const SoundsScreen = ({ navigation }) => {
   const [selectedSound, setSelectedSound] = useState(null);
+  const [language, setLanguage] = useState('en');
+  const [text, setText] = useState(null);
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+          setText(lang === 'en' ? en : ar);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
 
   const handleSoundPress = sound => {
     setSelectedSound(sound);
@@ -26,7 +49,7 @@ const SoundsScreen = ({ navigation }) => {
           <Icon name="arrow-back" size={30} color="white" />
         </TouchableOpacity>
         <View style={styles.screenTitle}>
-          <Text style={styles.screenTitleText}>Sounds</Text>
+          <Text style={styles.screenTitleText}>{text && language === 'en' ? 'Sounds' : 'الأصوات'}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.accountButton, { marginRight: 30 }]} onPress={() => navigation.navigate('Account')}>
@@ -44,12 +67,7 @@ const SoundsScreen = ({ navigation }) => {
             key={index}
             style={styles.soundButton}
             onPress={() => handleSoundPress(sound)}>
-            <Text style={styles.soundText}>
-              {sound.split('_').map(word => {
-                return word[0].toUpperCase() + word.slice(1);
-              })
-                .join(' ')}
-            </Text>
+            <Text style={styles.soundText}>{text && text[sound]}</Text>
           </TouchableOpacity>
         ))}
       </View>

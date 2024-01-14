@@ -1,24 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const en = require('../../locales/en/sounds.json');
+const ar = require('../../locales/ar/sounds.json');
 const soundsMapping = require('../../sounds_mapping.json');
 
 const SubSoundsScreen = ({ route, navigation }) => {
   const { sound } = route.params;
   const [searchQuery, setSearchQuery] = useState('');
-  const [subSounds, setSubSounds] = useState([]);
+  const [subSounds, setSubSounds] = useState({});
   const [loading, setLoading] = useState(true);
+  const [language, setLanguage] = useState('en');
+  const [text, setText] = useState(null);
 
   useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+          setText(lang === 'en' ? en : ar);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
+
+  useEffect(() => {
+    if (!text) return;
     setLoading(true);
-    const subSoundsList = [];
+    const subSoundsList = {};
     for (const subSound in soundsMapping[sound]) {
-      subSoundsList.push(Object.keys(soundsMapping[sound][subSound])[0]);
+      subSoundsList[Object.keys(soundsMapping[sound][subSound])[0]] = text[Object.keys(soundsMapping[sound][subSound])[0]];
     }
     setSubSounds(subSoundsList);
     setLoading(false);
-  }, [sound]);
+  }, [text]);
 
 
   const handleSubSoundPress = subSound => {
@@ -26,8 +49,8 @@ const SubSoundsScreen = ({ route, navigation }) => {
   };
 
   // Filter sub-options based on the search query
-  const filteredSubSounds = subSounds.filter(subSound =>
-    subSound.toLowerCase().startsWith(searchQuery.toLowerCase()),
+  const filteredSubSounds = Object.keys(subSounds).filter(subSound =>
+    subSounds[subSound].toLowerCase().startsWith(searchQuery.toLowerCase()),
   );
 
   return (
@@ -38,9 +61,7 @@ const SubSoundsScreen = ({ route, navigation }) => {
         </TouchableOpacity>
         <View style={styles.screenTitle}>
           <Text style={styles.screenTitleText}>
-            {sound.split('_').slice(0, -1).map(word => {
-              return word[0].toUpperCase() + word.slice(1);
-            }).join(' ')}{'\n'}Sounds
+            {text && text[sound].split(' ').slice(0, -1).join(' ') + '\n' + text[sound].split(' ').slice(-1)}
           </Text>
         </View>
         <View style={styles.buttonContainer}>
@@ -56,23 +77,19 @@ const SubSoundsScreen = ({ route, navigation }) => {
         <ScrollView style={{ marginTop: 90, flex: 1 }}>
           <TextInput
             style={styles.searchBar}
-            placeholder="Search Sounds"
+            placeholder={language === 'en' ? 'Search...' : 'ابحث...'}
             value={searchQuery}
             onChangeText={text => setSearchQuery(text)}
           />
-          {!loading ? (
+          {!loading && text ? (
             <View
               style={{ padding: 10, overflow: 'scroll' }}>
-              {filteredSubSounds.map((item, index) => (
+              {filteredSubSounds.map(subSound => (
                 <TouchableOpacity
-                  key={index}
+                  key={subSound}
                   style={styles.subSoundButton}
-                  onPress={() => handleSubSoundPress(item)}>
-                  <Text style={styles.soundText}>
-                    {item.split('_').map(word => {
-                      return word[0].toUpperCase() + word.slice(1);
-                    }).join(' ')}
-                  </Text>
+                  onPress={() => handleSubSoundPress(subSound)}>
+                  <Text style={styles.soundText}>{subSounds[subSound]}</Text>
                 </TouchableOpacity>
               ))}
             </View>
