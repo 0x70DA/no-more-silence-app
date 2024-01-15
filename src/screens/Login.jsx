@@ -18,6 +18,7 @@ import {
   Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GOOGLE_WEB_CLIENT_ID } from '@env';
 
 
 const Login = () => {
@@ -45,7 +46,7 @@ const Login = () => {
   const auth = FIREBASE_AUTH;
 
   GoogleSignin.configure({
-    webClientId: '149797427120-2pa9be7ct0lc2gh8jj3l5cq0rgevr481.apps.googleusercontent.com',
+    webClientId: GOOGLE_WEB_CLIENT_ID,
   });
 
   const signInWithGoogle = async () => {
