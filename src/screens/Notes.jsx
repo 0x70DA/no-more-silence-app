@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -32,7 +32,7 @@ const Notes = ({ navigation }) => {
       <View style={styles.backgroundContainer}>
         <View style={styles.oval1} />
         <View style={styles.oval2} />
-        <View style={styles.centeredContainer}>
+        <ScrollView contentContainerStyle={styles.centeredContainer}>
           <View style={styles.textContainer}>
             {text.notes.map((text, index) => (
               <View key={index} style={styles.row}>
@@ -41,12 +41,10 @@ const Notes = ({ navigation }) => {
               </View>
             ))}
           </View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
             <Text style={styles.buttonText}>{language === 'en' ? 'Got It' : 'فهمت'}</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -59,33 +57,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backgroundContainer: {
+    flex: 1,
     width: '100%',
-    height: '100%',
     backgroundColor: 'white',
     overflow: 'hidden',
     position: 'relative',
   },
   oval1: {
     position: 'absolute',
-    left: -250 / 2,
+    left: '-50%',
     top: 0,
-    width: 300,
-    height: 300,
+    width: '80%',
+    height: '50%',
     borderRadius: 500,
     backgroundColor: '#E3EFFA',
   },
   oval2: {
     position: 'absolute',
-    left: 233,
-    top: 515,
-    width: 363,
-    height: 383,
+    left: '60%',
+    top: '60%',
+    width: '80%',
+    height: '50%',
     borderRadius: 500,
     backgroundColor: '#E3EFFA',
   },
   centeredContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
-    flex: 1,
     marginBottom: 100,
   },
   textContainer: {
@@ -100,18 +98,18 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
     paddingRight: 20,
     paddingLeft: 50,
-    position: 'relative',
-    left: 10,
+    left: '5%',
   },
   button: {
     backgroundColor: '#052E45',
-    width: 181,
-    height: 52,
+    width: '50%',
+    height: '7%',
     alignSelf: 'center',
     borderRadius: 10,
     marginRight: 30,
     marginLeft: 210,
     marginTop: 20,
+    marginBottom: 20,
   },
   buttonText: {
     color: '#FFF',
@@ -128,8 +126,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: 'absolute',
-    left: 20,
-    top: 25,
+    left: '5%',
+    top: '13%',
   },
 });
 

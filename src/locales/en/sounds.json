@@ -139,5 +139,6 @@
     "ship": "Ship",
     "train": "Train",
     "directionOfSound": "Keep changing the direction of the sound: right and left, near or far and ask your child if they can identify the direction, after your child guess correctly for 7-10 answers out of ten right you can move to the next phase.",
-    "existenceOfSound": "Keep playing and stoping the sound, ask your child if they can identify if the sound exist or not after your child can guess coreclty for 7-10 answers out of ten right you can move to the next phase."
+    "existenceOfSound": "Keep playing and stoping the sound, ask your child if they can identify if the sound exist or not after your child can guess coreclty for 7-10 answers out of ten right you can move to the next phase.",
+    "soundPractice": "Keep playing the sound and ask your child to identify the sound, cycling through the images."
 }

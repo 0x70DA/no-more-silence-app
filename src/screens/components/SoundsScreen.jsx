@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -61,7 +61,7 @@ const SoundsScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <View style={{ position: 'absolute', top: 90 }}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {sounds.map((sound, index) => (
           <TouchableOpacity
             key={index}
@@ -70,7 +70,7 @@ const SoundsScreen = ({ navigation }) => {
             <Text style={styles.soundText}>{text && text[sound]}</Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    height: 72,
+    height: 56,
     backgroundColor: '#052E45',
     position: 'absolute',
     top: 0,
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     position: 'relative',
     marginRight: -10,
-    top: -15,
+    top: -10,
     zIndex: 1,
   },
   accountButton: {
     left: 5,
-    top: 25,
+    top: 15,
     position: 'relative',
   },
   screenTitle: {
@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
   },
   screenTitleText: {
     color: 'white',
-    fontSize: 21,
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   homeButton: {
     right: 10,
-    top: 15,
+    top: 10,
     position: 'relative',
     padding: 10,
   },
@@ -131,17 +131,21 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 10,
     backgroundColor: '#D9D9D9',
-    width: 351,
-    height: 73,
+    width: '90%',
+    alignSelf: 'center',
   },
   soundText: {
     color: 'black',
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'Inter',
     fontStyle: 'italic',
     fontWeight: '800',
     textAlign: 'center',
     padding: 10,
+  },
+  scrollViewContent: {
+    paddingTop: 90,
+    paddingBottom: 80,
   },
 });
 

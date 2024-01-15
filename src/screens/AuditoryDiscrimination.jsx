@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { useTrackPlayerEvents, usePlaybackState } from 'react-native-track-player';
 import TrackPlayer, { State } from 'react-native-track-player';
@@ -230,7 +230,7 @@ const AuditoryDiscrimination = ({ navigation }) => {
           <ActivityIndicator size="45" color="#052E45" />
         </View>
       ) : (
-        <View style={{ flex: 1, position: 'relative' }}>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <View style={styles.statsContainer}>
             <Text style={styles.statsText}>
               {language === 'en' ? 'Score' : 'الدرجة'}{`: ${score}`}/{Object.keys(questionsMapping).length}
@@ -267,7 +267,7 @@ const AuditoryDiscrimination = ({ navigation }) => {
               <Icon name={isPlaying ? 'pause-circle-sharp' : 'play-circle-sharp'} size={80} color="#052E45" />
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       )}
     </View>
   );
@@ -285,9 +285,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 72,
     backgroundColor: '#052E45',
-    position: 'absolute',
-    top: 0,
-    left: 0,
     paddingHorizontal: 10,
     zIndex: 1,
   },
@@ -297,72 +294,70 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    position: 'relative',
-    marginRight: -10,
-    top: -15,
-    zIndex: 1,
+    marginLeft: 'auto',
   },
   accountButton: {
-    left: 15,
-    top: 25,
-    position: 'relative',
+    top: 10,
   },
   screenTitle: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: -40,
   },
   screenTitleText: {
     color: 'white',
-    fontSize: 21,
+    fontSize: 17,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   homeButton: {
-    right: 10,
-    top: 15,
-    position: 'relative',
-    padding: 10,
+    paddingVertical: 10,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    alignItems: 'center',
   },
   playButton: {
     alignSelf: 'center',
-    paddingTop: 20,
+    paddingTop: '5%',
+    top: '55%',
   },
   progressBarContainer: {
-    width: 350,
-    paddingTop: 20,
+    width: '300%',
     alignSelf: 'center',
+    top: '50%',
   },
   progressBarText: {
     textAlign: 'center',
-    paddingTop: 15,
+    paddingTop: '3%',
     color: 'black',
-    fontSize: 18,
+    top: '55%',
+    fontSize: 14,
   },
   statsContainer: {
-    alignSelf: 'center',
-    position: 'absolute',
-    top: 100,
+    marginTop: '5%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   statsText: {
     color: 'black',
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   imagesContainer: {
     flexDirection: 'row',
-    position: 'absolute',
-    top: 250,
-    alignSelf: 'center',
+    marginTop: '15%',
+    justifyContent: 'space-around',
   },
   image: {
-    width: 200,
-    height: 200,
-    marginHorizontal: 3,
-    borderRadius: 5,
+    width: '50%',
+    height: '50%',
+    aspectRatio: 1,
+    borderRadius: 3,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: 'grey',
+    margin: '2%',
   },
 });
 

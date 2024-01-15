@@ -43,11 +43,12 @@ const Home = ({ navigation }) => {
       <Image
         source={require('../../assets/arrow_1.png')}
         style={{
-          width: 234,
-          height: 145,
+          width: '30%',
+          height: '30%',
           position: 'absolute',
-          top: 91,
-          left: 19,
+          top: '3%',
+          left: '5%',
+          resizeMode: 'contain',
         }}
       />
       <TouchableOpacity
@@ -65,11 +66,12 @@ const Home = ({ navigation }) => {
       <Image
         source={require('../../assets/arrow_2.png')}
         style={{
-          width: 194,
-          height: 200,
+          width: '28%',
+          height: '23%',
           position: 'absolute',
-          top: 324,
-          left: 50,
+          top: '33%',
+          left: '20%',
+          resizeMode: 'contain',
         }}
       />
       <TouchableOpacity
@@ -87,11 +89,12 @@ const Home = ({ navigation }) => {
       <Image
         source={require('../../assets/arrow_3.png')}
         style={{
-          width: 187,
-          height: 129,
+          width: '40%',
+          height: '35%',
           position: 'absolute',
-          top: 601,
-          left: 47,
+          top: '58%',
+          left: '10%',
+          resizeMode: 'contain',
         }}
       />
       <TouchableOpacity
@@ -99,7 +102,7 @@ const Home = ({ navigation }) => {
         onPress={() => navigation.navigate('AuditoryDiscrimination')}>
         <View style={{ flexDirection: 'row', marginTop: 4 }}>
           <Text style={styles.buttonText}>
-            {language === 'en' ? 'Auditory Discrimination Activity' : '\nنشاط التمييز السمعي'}
+            {language === 'en' ? 'Auditory Discrimination\nActivity' : '\nنشاط التمييز السمعي'}
           </Text>
           <Image
             source={require('../../assets/auditory.png')}
@@ -107,8 +110,8 @@ const Home = ({ navigation }) => {
               width: 44,
               height: 62,
               position: 'absolute',
-              right: 20,
-              top: 20,
+              right: 30,
+              top: -2,
             }}
           />
         </View>
@@ -127,7 +130,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    height: 72,
+    height: '10%',
     backgroundColor: '#052E45',
     position: 'absolute',
     top: 0,
@@ -148,59 +151,61 @@ const styles = StyleSheet.create({
   },
   accountButton: {
     left: 10,
-    top: 25,
+    top: '25%',
     position: 'relative',
   },
   screenTitle: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: -40,
   },
   screenTitleText: {
     color: 'white',
-    fontSize: 21,
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   homeButton: {
     right: 10,
-    top: 15,
+    top: '15%',
     position: 'relative',
-    padding: 10
+    padding: 10,
   },
   identificationButton: {
     borderRadius: 10,
     backgroundColor: '#052E45',
-    width: 236,
-    height: 72,
+    width: '60%',
+    height: '11%',
     position: 'absolute',
-    top: 238,
-    left: 145,
+    top: '24%',
+    left: '30%',
+    zIndex: 1,
   },
   practiceButton: {
     borderRadius: 10,
     backgroundColor: '#052E45',
-    width: 268,
-    height: 72,
+    width: '60%',
+    height: '10%',
     position: 'absolute',
-    top: 528,
-    left: 11,
+    top: '55%',
+    left: '5%',
+    zIndex: 1,
   },
   auditoryButton: {
     borderRadius: 10,
     backgroundColor: '#052E45',
-    width: 297,
-    height: 83,
+    width: '80%',
+    height: '10%',
     position: 'absolute',
-    top: 733,
-    left: 102,
+    top: '85%',
+    left: '15%',
+    zIndex: 1,
   },
   buttonText: {
     color: '#FFF',
     fontFamily: 'Inter',
-    fontSize: 24,
-    fontWeight: '800',
-    marginLeft: 20,
+    fontSize: 18,
+    marginLeft: '5%',
   },
 });
 

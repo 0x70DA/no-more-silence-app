@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import { useTrackPlayerEvents, usePlaybackState } from 'react-native-track-player';
 import TrackPlayer, { State } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -148,68 +148,79 @@ const PlaySoundScreen = ({ route, navigation }) => {
         </View>
       </View>
 
-      {!loading && text ? (
-        <View style={{ position: 'absolute', top: 90 }}>
-          <View style={styles.soundTitleContainer}>
-            <Text style={styles.soundTitleText}>
-              {text[subSound]}
-            </Text>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity onPress={handlePrevImage} style={styles.arrowButton}>
-              <Image source={require('../../../assets/left_arrow.png')} style={styles.arrowIcon} />
-            </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {!loading && text ? (
+          <View style={{ position: 'relative', top: '15%', flex: 1 }}>
+            <View style={styles.soundTitleContainer}>
+              <Text style={styles.soundTitleText}>
+                {text[subSound]}
+              </Text>
+            </View>
             <View style={styles.imageContainer}>
               <Image source={files[`${sound}/${subSound}/${images[currentImageIndex]}`]} style={styles.image} />
             </View>
-            <TouchableOpacity onPress={handleNextImage} style={styles.arrowButton}>
-              <Image source={require('../../../assets/right_arrow.png')} style={styles.arrowIcon} />
-            </TouchableOpacity>
-          </View>
-
-          {audio.length === 0 ? (
-            <View style={{ marginTop: 25 }}>
-              <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'black' }}>
-                {language === 'en' ? 'No audio file found!' : 'لم يتم العثور على ملف صوتي!'}
-              </Text>
-            </View>
-          ) : (
-            <View>
-              <View style={styles.progressBarContainer}>
-                <ProgressBar progress={progress / 100} borderWidth={0} width={null} height={8} color={'#052E45'} unfilledColor={'#999993'} />
-              </View>
-
-              <Text style={styles.progressBarText}>
-                {formatTime(progress * (duration / 100))}
-                {' / '}
-                {formatTime(duration)}
-              </Text>
-
-              <TouchableOpacity style={styles.playButton} onPress={handlePlayPause}>
-                <Icon name={isPlaying ? 'pause-circle-sharp' : 'play-circle-sharp'} size={80} color="#052E45" />
+            <View style={styles.arrowContainer}>
+              <TouchableOpacity onPress={handlePrevImage} style={styles.arrowButton}>
+                <Image source={require('../../../assets/left_arrow.png')} style={styles.arrowIcon} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleNextImage} style={styles.arrowButton}>
+                <Image source={require('../../../assets/right_arrow.png')} style={styles.arrowIcon} />
               </TouchableOpacity>
             </View>
-          )}
-          {identificationType === 'direction' &&
-            <View style={styles.noteContainer}>
-              <Text style={styles.noteText}>{text.directionOfSound}</Text>
-            </View>}
-          {identificationType === 'existence' &&
-            <View style={styles.noteContainer}>
-              <Text style={styles.noteText}>{text.existenceOfSound}</Text>
-            </View>}
-        </View>
-      ) : (
-        <View>
-          <ActivityIndicator size="45" color="black" style={{ marginTop: 100 }} />
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      )}
+
+            {audio.length === 0 ? (
+              <View style={styles.noAudioContainer}>
+                <Text style={styles.noAudioText}>
+                  {language === 'en' ? 'No audio file found!' : 'لم يتم العثور على ملف صوتي!'}
+                </Text>
+              </View>
+            ) : (
+              <View>
+                <View style={styles.progressBarContainer}>
+                  <ProgressBar progress={progress / 100} borderWidth={0} width={null} height={8} color={'#052E45'} unfilledColor={'#999993'} />
+                </View>
+
+                <Text style={styles.progressBarText}>
+                  {formatTime(progress * (duration / 100))}
+                  {' / '}
+                  {formatTime(duration)}
+                </Text>
+
+                <TouchableOpacity style={styles.playButton} onPress={handlePlayPause}>
+                  <Icon name={isPlaying ? 'pause-circle-sharp' : 'play-circle-sharp'} size={80} color="#052E45" />
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {identificationType === 'direction' &&
+              <View style={styles.noteContainer}>
+                <Text style={styles.noteText}>{text.directionOfSound}</Text>
+              </View>}
+            {identificationType === 'existence' &&
+              <View style={styles.noteContainer}>
+                <Text style={styles.noteText}>{text.existenceOfSound}</Text>
+              </View>}
+              {!identificationType && (
+                <View style={styles.noteContainer}>
+                <Text style={styles.noteText}>{text.soundPractice}</Text>
+              </View>
+              )}
+          </View>
+        ) : (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="black" />
+            <Text style={styles.loadingText}>Loading...</Text>
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -267,6 +278,8 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignSelf: 'center',
+    marginBottom: 10,
+    marginTop: -30,
   },
   soundTitleText: {
     alignSelf: 'center',
@@ -274,20 +287,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold'
   },
-  loadingText: {
-    padding: 5,
-    marginLeft: 10,
-    color: 'black'
-  },
   imageContainer: {
-    position: 'relative',
-    width: 300,
+    width: '80%',
     height: 350,
     marginTop: 25,
     borderRadius: 39,
     borderColor: 'grey',
     borderWidth: 2,
     overflow: 'hidden',
+    alignSelf: 'center',
   },
   image: {
     flex: 1,
@@ -298,11 +306,13 @@ const styles = StyleSheet.create({
   arrowContainer: {
     flexDirection: 'row',
     marginTop: 10,
+    justifyContent: 'center',
+    marginBottom: 20,
   },
   arrowButton: {
     padding: 10,
     position: 'relative',
-    top: 170,
+    top: '0%',
   },
   arrowIcon: {
     width: 50,
@@ -314,25 +324,50 @@ const styles = StyleSheet.create({
   playButton: {
     alignSelf: 'center',
     paddingTop: 20,
+    marginBottom: 20,
   },
   progressBarContainer: {
-    width: 350,
-    paddingTop: 20,
+    width: '80%',
+    paddingTop: 5,
     alignSelf: 'center',
+    marginBottom: 20,
   },
   progressBarText: {
     textAlign: 'center',
     paddingTop: 15,
     color: 'black',
     fontSize: 18,
+    marginBottom: 20,
+  },
+  noAudioContainer: {
+    marginTop: 25,
+    alignItems: 'center',
+  },
+  noAudioText: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    color: 'black',
   },
   noteContainer: {
     marginTop: 10,
     backgroundColor: '#E3EFFA',
     width: '100%',
-    height: 155,
+    height: 165,
     padding: 10,
     justifyContent: 'center',
+    alignSelf: 'center',
+    borderRadius: 10,
+    marginBottom: 200,
   },
   noteText: {
     textAlign: 'center',

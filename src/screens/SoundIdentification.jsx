@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   screenTitleText: {
     color: 'white',
-    fontSize: 21,
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
   },

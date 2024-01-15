@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Linking, ScrollView } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { RadioButton } from 'react-native-paper';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
@@ -70,38 +70,39 @@ const Account = ({ navigation }) => {
             </View>
           </View>
 
-          <View style={styles.contactContainer}>
-            <Text style={[styles.contactText, language === 'ar' && { textAlign: 'right' }]} selectable={true}>
-              {text.contact}
-              <Text style={{ color: 'blue' }} onPress={handleFormLinkPress}> {text.form}</Text>.
-            </Text>
-          </View>
-
-          <View style={styles.selectLangContainer}>
-            <Text style={styles.selectLangText}>{text.select_language}</Text>
-            <View style={styles.radioButtonGroup}>
-              <RadioButton.Item
-                label="English"
-                value="en"
-                color="blue"
-                status={language === 'en' ? 'checked' : 'unchecked'}
-                onPress={() => handleLanguageChange('en')}
-              />
-              <RadioButton.Item
-                label="Arabic/العربية"
-                value="ar"
-                color="blue"
-                status={language === 'ar' ? 'checked' : 'unchecked'}
-                onPress={() => handleLanguageChange('ar')}
-              />
+          <ScrollView style={styles.scrollContainer}>
+            <View style={styles.contactContainer}>
+              <Text style={[styles.contactText, language === 'ar' && { textAlign: 'right' }]} selectable={true}>
+                {text.contact}
+                <Text style={{ color: 'blue' }} onPress={handleFormLinkPress}> {text.form}</Text>.
+              </Text>
             </View>
-          </View>
 
-          <View style={styles.signOutContainer}>
-            <TouchableOpacity style={styles.signOutButton} onPress={() => FIREBASE_AUTH.signOut()}>
-              <Text style={styles.signOutText}>{text.logout}</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.selectLangContainer}>
+              <Text style={styles.selectLangText}>{text.select_language}</Text>
+              <View style={styles.radioButtonGroup}>
+                <RadioButton.Item
+                  label="English"
+                  value="en"
+                  color="blue"
+                  status={language === 'en' ? 'checked' : 'unchecked'}
+                  onPress={() => handleLanguageChange('en')}
+                />
+                <RadioButton.Item
+                  label="Arabic/العربية"
+                  value="ar"
+                  color="blue"
+                  status={language === 'ar' ? 'checked' : 'unchecked'}
+                  onPress={() => handleLanguageChange('ar')}
+                />
+              </View>
+            </View>
+            <View style={styles.signOutContainer}>
+              <TouchableOpacity style={styles.signOutButton} onPress={() => FIREBASE_AUTH.signOut()}>
+                <Text style={styles.signOutText}>{text.logout}</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
 
           <View style={styles.bottomBar} />
           <View style={styles.copyrightContainer}>
@@ -125,11 +126,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 72,
     backgroundColor: '#052E45',
-    position: 'absolute',
-    top: 0,
-    left: 0,
     paddingHorizontal: 10,
-    zIndex: 1,
   },
   backButton: {
     padding: 10,
@@ -137,20 +134,19 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    position: 'relative',
-    marginRight: -10,
-    top: -15,
-    zIndex: 1,
+    marginLeft: 'auto',
   },
   accountButton: {
+    top: 10,
     left: 10,
-    top: 25,
-    position: 'relative',
+  },
+  homeButton: {
+    top: 10,
   },
   screenTitle: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: -40,
   },
   screenTitleText: {
     color: 'white',
@@ -159,22 +155,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   homeButton: {
-    right: 10,
-    top: 15,
-    position: 'relative',
-    padding: 10
+    padding: 10,
+  },
+  scrollContainer: {
+    flex: 1,
+    width: '100%',
   },
   contactContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    top: 100,
-    backgroundColor: '#E3EFFA',
     paddingVertical: 20,
-    paddingHorizontal: 5,
-    width: '95%',
-    height: 400,
+    paddingHorizontal: 10,
+    backgroundColor: '#E3EFFA',
   },
   contactText: {
     color: 'black',
@@ -183,9 +173,29 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     lineHeight: 40,
   },
+  selectLangContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectLangText: {
+    color: 'black',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  radioButtonGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
   signOutContainer: {
-    position: 'absolute',
-    bottom: 80,
+    marginBottom: 15,
+    width: '50%',
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   signOutButton: {
     backgroundColor: '#052E45',
@@ -197,6 +207,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   bottomBar: {
     width: '100%',
@@ -204,39 +215,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#052E45',
     position: 'absolute',
     bottom: 0,
-    left: 0,
   },
   copyrightContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    height: 72,
-    backgroundColor: '#052E45',
     justifyContent: 'center',
+    paddingVertical: 10,
+    backgroundColor: '#052E45',
+    width: '100%',
+    height: '12%'
   },
   copyrightText: {
     textAlign: 'center',
     color: 'white',
     fontSize: 22,
-  },
-  selectLangContainer: {
-    position: 'absolute',
-    bottom: 300,
-  },
-  selectLangText: {
-    color: 'black',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  radioButtonGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'absolute',
-    top: 40,
-    alignContent: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
   },
 });
 
