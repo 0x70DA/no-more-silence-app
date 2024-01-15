@@ -94,24 +94,45 @@ const AuditoryDiscrimination = ({ navigation }) => {
       stopPlayer();
       await TrackPlayer.reset();
 
-      Alert.alert('Quiz Complete! 👏', `Your final score is ${currentScore}.`, [
-        {
-          text: 'Retake Quiz',
-          onPress: () => navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [
-                { name: 'Home' },
-                { name: 'AuditoryDiscrimination' },
-              ],
-            }),
-          ),
-        },
-        {
-          text: 'Return Home',
-          onPress: () => navigation.navigate('Home'),
-        },
-      ]);
+      if (language === 'en') {
+        Alert.alert('Quiz Complete! 👏', `Your final score is ${currentScore}.`, [
+          {
+            text: 'Retake Quiz',
+            onPress: () => navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [
+                  { name: 'Home' },
+                  { name: 'AuditoryDiscrimination' },
+                ],
+              }),
+            ),
+          },
+          {
+            text: 'Return Home',
+            onPress: () => navigation.navigate('Home'),
+          },
+        ]);
+      } else {
+        Alert.alert('اكتمل الاختبار! 👏', `الدرجة النهائية ${currentScore}.`, [
+          {
+            text: 'إعادة الاختبار',
+            onPress: () => navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [
+                  { name: 'Home' },
+                  { name: 'AuditoryDiscrimination' },
+                ],
+              }),
+            ),
+          },
+          {
+            text: 'العودة إلى الصفحة الرئيسية',
+            onPress: () => navigation.navigate('Home'),
+          },
+        ]);
+      }
     } else {
       stopPlayer();
       await TrackPlayer.reset();
@@ -130,18 +151,31 @@ const AuditoryDiscrimination = ({ navigation }) => {
   const handleImagePress = async (image) => {
     if (image === files[`${currentQuestion}/right`]) {
       stopPlayer();
-      Alert.alert('Correct! 🎉', '', [
-        {
-          text: 'OK',
-          onPress: () => getNextQuestion(),
-        },
-      ]);
+      if (language === 'en') {
+        Alert.alert('Correct! 🎉', '', [
+          {
+            text: 'OK',
+            onPress: () => getNextQuestion(),
+          },
+        ]);
+      } else {
+        Alert.alert('صحيح! 🎉', '', [
+          {
+            text: 'OK',
+            onPress: () => getNextQuestion(),
+          },
+        ]);
+      }
       return;
     }
     await TrackPlayer.pause();
     setIsPlaying(false);
     setFirstTry(false);
-    Alert.alert('Try again! 🤔');
+    if (language === 'en') {
+      Alert.alert('Try again! 🤔');
+    } else {
+      Alert.alert('حاول مرة أخرى! 🤔');
+    }
   };
 
   const stopPlayer = async () => {
