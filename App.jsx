@@ -10,9 +10,9 @@ import Account from './src/screens/Account';
 import SoundIdentification from './src/screens/SoundIdentification';
 import SoundPractice from './src/screens/SoundPractice';
 import AuditoryDiscrimination from './src/screens/AuditoryDiscrimination';
+import SelectLanguage from './src/screens/SelectLanguage';
 import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const stack = createNativeStackNavigator();
 
@@ -59,13 +59,6 @@ export default function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Set the default app language to English if it is not set
-    AsyncStorage.getItem('language').then(language => {
-      if (!language) {
-        AsyncStorage.setItem('language', 'en');
-      }
-    });
-
     onAuthStateChanged(FIREBASE_AUTH, user => {
       setUser(user);
     });
@@ -85,6 +78,11 @@ export default function App() {
             <stack.Screen
               name="Welcome"
               component={Welcome}
+              options={{ headerShown: false }}
+            />
+            <stack.Screen
+              name="SelectLanguage"
+              component={SelectLanguage}
               options={{ headerShown: false }}
             />
             <stack.Screen

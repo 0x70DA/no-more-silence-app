@@ -3,14 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Welcome = ({ navigation }) => {
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(null);
 
   useEffect(() => {
     // Get current app language
     const getLanguage = async () => {
       try {
         const lang = await AsyncStorage.getItem('language');
-        if (lang !== null) {
+        if (lang) {
           setLanguage(lang);
         }
       } catch (e) {
@@ -21,13 +21,21 @@ const Welcome = ({ navigation }) => {
     getLanguage();
   }, []);
 
+  const getStarted = () => {
+    if (!language) {
+      navigation.navigate('SelectLanguage');
+    } else {
+      navigation.navigate('WelcomeMessage');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/welcome.png')} style={styles.image} resizeMode="cover" />
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('WelcomeMessage')}>
-        <Text style={styles.text}>{language === 'en' ? 'Get Started' : 'البدء'}</Text>
+        onPress={getStarted}>
+        <Text style={styles.text}>{language === 'ar' ? 'البدء' : 'Get Started'}</Text>
       </TouchableOpacity>
     </View>
   );
