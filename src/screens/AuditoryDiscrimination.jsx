@@ -23,6 +23,8 @@ const AuditoryDiscrimination = ({ navigation }) => {
   const [firstTry, setFirstTry] = useState(false);
   const playbackState = usePlaybackState();
   const [language, setLanguage] = useState('en');
+  const [timer, setTimer] = useState(60);
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
 
   useEffect(() => {
     // Get current app language
@@ -42,6 +44,12 @@ const AuditoryDiscrimination = ({ navigation }) => {
 
   useEffect(() => {
     getNextQuestion();
+    const timerId = setInterval(() => {
+      setTimer(prevTimer => {
+        if (prevTimer === 0) setIsTimerRunning(false); // Stop the timer when it reaches zero
+        return prevTimer === 0 ? 0 : prevTimer - 1;
+      });
+    }, 1000);
 
     // Clean up player when component unmounts.
     return () => {
@@ -49,8 +57,15 @@ const AuditoryDiscrimination = ({ navigation }) => {
         await TrackPlayer.reset();
       };
       resetPlayer();
+      clearInterval(timerId);
     };
   }, []);
+
+  useEffect(() => {
+    if (isTimerRunning && timer === 0) {
+      handleQuizEnd();
+    }
+  }, [isTimerRunning, timer]);
 
   useEffect(() => {
     setLoading(true);
@@ -84,6 +99,9 @@ const AuditoryDiscrimination = ({ navigation }) => {
   }, [playbackState]);
 
   const getNextQuestion = async () => {
+    setTimer(60);
+    setIsTimerRunning(true);
+
     let currentScore = score;
     if (firstTry) {
       currentScore += 1;
@@ -91,48 +109,7 @@ const AuditoryDiscrimination = ({ navigation }) => {
     }
 
     if (allQuestions.length === 0) {
-      stopPlayer();
-      await TrackPlayer.reset();
-
-      if (language === 'en') {
-        Alert.alert('Quiz Complete! 👏', `Your final score is ${currentScore}.`, [
-          {
-            text: 'Retake Quiz',
-            onPress: () => navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [
-                  { name: 'Home' },
-                  { name: 'AuditoryDiscrimination' },
-                ],
-              }),
-            ),
-          },
-          {
-            text: 'Return Home',
-            onPress: () => navigation.navigate('Home'),
-          },
-        ]);
-      } else {
-        Alert.alert('اكتمل الاختبار! 👏', `الدرجة النهائية ${currentScore}.`, [
-          {
-            text: 'إعادة الاختبار',
-            onPress: () => navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [
-                  { name: 'Home' },
-                  { name: 'AuditoryDiscrimination' },
-                ],
-              }),
-            ),
-          },
-          {
-            text: 'العودة إلى الصفحة الرئيسية',
-            onPress: () => navigation.navigate('Home'),
-          },
-        ]);
-      }
+      handleQuizEnd();
     } else {
       stopPlayer();
       await TrackPlayer.reset();
@@ -149,33 +126,47 @@ const AuditoryDiscrimination = ({ navigation }) => {
   };
 
   const handleImagePress = async (image) => {
+    setIsTimerRunning(false);
+
     if (image === files[`${currentQuestion}/right`]) {
       stopPlayer();
-      if (language === 'en') {
-        Alert.alert('Correct! 🎉', '', [
-          {
-            text: 'OK',
-            onPress: () => getNextQuestion(),
-          },
-        ]);
-      } else {
-        Alert.alert('صحيح! 🎉', '', [
-          {
-            text: 'OK',
-            onPress: () => getNextQuestion(),
-          },
-        ]);
-      }
+      Alert.alert(language === 'en' ? 'Correct! 🎉' : 'صحيح! 🎉', '', [
+        {
+          text: 'OK',
+          onPress: () => getNextQuestion(),
+        },
+      ]);
       return;
     }
+
     await TrackPlayer.pause();
     setIsPlaying(false);
     setFirstTry(false);
-    if (language === 'en') {
-      Alert.alert('Try again! 🤔');
-    } else {
-      Alert.alert('حاول مرة أخرى! 🤔');
-    }
+    Alert.alert(language === 'en' ? 'Try again! 🤔' : 'حاول مرة أخرى! 🤔');
+  };
+
+  const handleQuizEnd = () => {
+    stopPlayer();
+    Alert.alert(
+      language === 'en' ? 'Quiz Ended' : 'انتهى الاختبار',
+      language === 'en' ? `Your final score is ${score}.` : `الدرجة النهائية ${score}.`,
+      [
+        {
+          text: language === 'en' ? 'Retake Quiz' : 'إعادة الاختبار',
+          onPress: () =>
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Home' }, { name: 'AuditoryDiscrimination' }],
+              })
+            ),
+        },
+        {
+          text: language === 'en' ? 'Return Home' : 'العودة إلى الصفحة الرئيسية',
+          onPress: () => navigation.navigate('Home'),
+        },
+      ]
+    );
   };
 
   const stopPlayer = async () => {
@@ -237,6 +228,9 @@ const AuditoryDiscrimination = ({ navigation }) => {
             </Text>
             <Text style={styles.statsText}>
               {language === 'en' ? 'Remaining Questions' : 'الأسئلة المتبقية'}: {allQuestions.length}
+            </Text>
+            <Text style={styles.statsText}>
+              {language === 'en' ? 'Time Remaining' : 'الوقت المتبقي'}: {formatTime(timer)}
             </Text>
             <Text style={[styles.statsText, { top: 40 }]}>{language === 'en' ? 'Select the correct image:' : 'اختر الصورة الصحيحة:'}</Text>
           </View>
