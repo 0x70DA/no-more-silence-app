@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTimer as practiceTimer } from '../SoundPractice';
+import { useTimer as identificationTimer } from '../SoundIdentification';
 
 const en = require('../../locales/en/sounds.json');
 const ar = require('../../locales/ar/sounds.json');
 const soundsMapping = require('../../sounds_mapping.json');
 
 const SubSoundsScreen = ({ route, navigation }) => {
+  const seconds = practiceTimer() || identificationTimer() || 0;
+  // Convert seconds to minutes and seconds for display
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
   const { sound } = route.params;
   const [searchQuery, setSearchQuery] = useState('');
   const [subSounds, setSubSounds] = useState({});
@@ -73,8 +80,15 @@ const SubSoundsScreen = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+
+      <View>
+        <Text style={styles.timerText}>
+          {language === 'en' ? 'Time Remaining: ' : 'الوقت المتبقي: '}{minutes}:{remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}
+        </Text>
+      </View>
+
       <KeyboardAvoidingView behavior='padding'>
-        <ScrollView style={{ marginTop: 90, flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
           <TextInput
             style={styles.searchBar}
             placeholder={language === 'en' ? 'Search...' : 'ابحث...'}
@@ -175,8 +189,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     backgroundColor: '#D9D9D9',
     borderRadius: 10,
-    width: 351,
-    height: 73,
+    width: 300,
+    height: 70,
   },
   soundText: {
     color: 'black',
@@ -186,6 +200,13 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     textAlign: 'center',
     padding: 10,
+  },
+  timerText: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 80,
   },
 });
 

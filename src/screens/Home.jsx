@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -53,7 +53,22 @@ const Home = ({ navigation }) => {
       />
       <TouchableOpacity
         style={styles.identificationButton}
-        onPress={() => navigation.navigate('SoundIdentification')}>
+        onPress={() => {
+          Alert.alert(
+            language === 'en' ? 'Start Timer' : 'بدء المؤقت',
+            language === 'en' ? 'A new 25-minute timer is starting. Are you ready?' : 'سوف يبدأ مؤقت جديد لمدة 25 دقيقة. هل أنت مستعد؟',
+            [
+              {
+                text: language === 'en' ? 'Cancel' : 'إلغاء',
+                style: 'cancel',
+              },
+              {
+                text: language === 'en' ? 'OK' : 'موافق',
+                onPress: () => navigation.navigate('SoundIdentification'),
+              },
+            ],
+          )
+        }}>
         <View style={{ flexDirection: 'row', marginTop: 4 }}>
           <Text style={styles.buttonText}>{language === 'en' ? 'Sound\nIdentification' : 'التعرف\nعلى الصوت'}</Text>
           <Image
@@ -76,7 +91,22 @@ const Home = ({ navigation }) => {
       />
       <TouchableOpacity
         style={styles.practiceButton}
-        onPress={() => navigation.navigate('SoundPractice')}>
+        onPress={() => {
+          Alert.alert(
+            language === 'en' ? 'Start Timer' : 'بدء المؤقت',
+            language === 'en' ? 'A new 25-minute timer is starting. Are you ready?' : 'سوف يبدأ مؤقت جديد لمدة 25 دقيقة. هل أنت مستعد؟',
+            [
+              {
+                text: language === 'en' ? 'Cancel' : 'إلغاء',
+                style: 'cancel',
+              },
+              {
+                text: language === 'en' ? 'OK' : 'موافق',
+                onPress: () => navigation.navigate('SoundPractice'),
+              },
+            ],
+          )
+        }}>
         <View style={{ flexDirection: 'row', marginTop: 4 }}>
           <Text style={styles.buttonText}>{language === 'en' ? 'Different Sound\nPractice' : 'التدريب على أصوات\nمختلفة'}</Text>
           <Image

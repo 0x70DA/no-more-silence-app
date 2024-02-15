@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Text, TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import SoundsScreen from './components/SoundsScreen';
@@ -7,10 +7,17 @@ import SubSoundsScreen from './components/SubSoundsScreen';
 import PlaySoundScreen from './components/PlaySoundScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const TimerContext = createContext();
+
 const Stack = createNativeStackNavigator();
 let identificationType;
 
 const IdentificationType = ({ navigation }) => {
+  const seconds = useTimer();
+  // Convert seconds to minutes and seconds for display
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
   const [language, setLanguage] = useState('en');
 
   useEffect(() => {
@@ -48,6 +55,12 @@ const IdentificationType = ({ navigation }) => {
         </View>
       </View>
 
+      <View>
+        <Text style={styles.timerText}>
+          {language === 'en' ? 'Time Remaining: ' : 'الوقت المتبقي: '}{minutes}:{remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}
+        </Text>
+      </View>
+
       <View style={styles.optionsContainer}>
         <TouchableOpacity style={styles.option} onPress={() => {
           identificationType = 'existence';
@@ -67,31 +80,80 @@ const IdentificationType = ({ navigation }) => {
   );
 };
 
-const SoundIdentification = () => {
+const SoundIdentification = ({ navigation }) => {
+  const [seconds, setSeconds] = useState(25 * 60);  // 25 minutes
+
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    // Get current app language
+    const getLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('language');
+        if (lang !== null) {
+          setLanguage(lang);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getLanguage();
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds(prevSeconds => Math.max(0, prevSeconds - 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (seconds === 0) {
+      Alert.alert(
+        language === 'en' ? 'Alert' : 'تنبيه',
+        language === 'en' ? 'Time is up!' : 'انتهى الوقت!',
+        [
+          {
+            text: language === 'en' ? 'Continue without timer' : 'متابعة بدون مؤقت',
+            style: 'cancel',
+          },
+          {
+            text: language === 'en' ? 'End session' : 'إنهاء الجلسة',
+            onPress: () => navigation.navigate('Home'),
+          },
+        ],
+      );
+    }
+  }, [seconds]);
+
   return (
-    <Stack.Navigator initialRouteName="IdentificationType">
-      <Stack.Screen
-        name="IdentificationType"
-        component={IdentificationType}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SoundsScreen"
-        component={SoundsScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SubSounds"
-        component={SubSoundsScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="PlaySoundScreen"
-        component={PlaySoundScreen}
-        options={{ headerShown: false }}
-        initialParams={{ identificationType: identificationType }}
-      />
-    </Stack.Navigator>
+    <TimerContext.Provider value={seconds}>
+      <Stack.Navigator initialRouteName="IdentificationType">
+        <Stack.Screen
+          name="IdentificationType"
+          component={IdentificationType}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SoundsScreen"
+          component={SoundsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SubSounds"
+          component={SubSoundsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PlaySoundScreen"
+          component={PlaySoundScreen}
+          options={{ headerShown: false }}
+          initialParams={{ identificationType: identificationType }}
+        />
+      </Stack.Navigator>
+    </TimerContext.Provider>
   );
 };
 
@@ -155,7 +217,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50
   },
   option: {
     backgroundColor: '#052E45',
@@ -172,6 +233,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
+  timerText: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 80,
+  },
 });
 
+const useTimer = () => useContext(TimerContext);
+
 export default SoundIdentification;
+export { useTimer };

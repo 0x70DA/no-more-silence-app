@@ -6,12 +6,19 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ProgressBar from 'react-native-progress/Bar';
 import files from '../../../assets/sounds';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTimer as practiceTimer } from '../SoundPractice';
+import { useTimer as identificationTimer } from '../SoundIdentification';
 
 const en = require('../../locales/en/sounds.json');
 const ar = require('../../locales/ar/sounds.json');
 const soundsMapping = require('../../sounds_mapping.json');
 
 const PlaySoundScreen = ({ route, navigation }) => {
+  const seconds = practiceTimer() || identificationTimer() || 0;
+  // Convert seconds to minutes and seconds for display
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
   const { sound, subSound, identificationType } = route.params;
   const [images, setImages] = useState([]);
   const [audio, setAudio] = useState([]);
@@ -148,9 +155,15 @@ const PlaySoundScreen = ({ route, navigation }) => {
         </View>
       </View>
 
+      <View>
+        <Text style={styles.timerText}>
+          {language === 'en' ? 'Time Remaining: ' : 'الوقت المتبقي: '}{minutes}:{remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}
+        </Text>
+      </View>
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {!loading && text ? (
-          <View style={{ position: 'relative', top: '15%', flex: 1 }}>
+          <View>
             <View style={styles.soundTitleContainer}>
               <Text style={styles.soundTitleText}>
                 {text[subSound]}
@@ -200,11 +213,11 @@ const PlaySoundScreen = ({ route, navigation }) => {
               <View style={styles.noteContainer}>
                 <Text style={styles.noteText}>{text.existenceOfSound}</Text>
               </View>}
-              {!identificationType && (
-                <View style={styles.noteContainer}>
+            {!identificationType && (
+              <View style={styles.noteContainer}>
                 <Text style={styles.noteText}>{text.soundPractice}</Text>
               </View>
-              )}
+            )}
           </View>
         ) : (
           <View style={styles.loadingContainer}>
@@ -222,7 +235,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container: {
-    flex: 1,
     alignItems: 'center',
   },
   topBar: {
@@ -279,7 +291,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     marginBottom: 10,
-    marginTop: -30,
+    marginTop: 10,
   },
   soundTitleText: {
     alignSelf: 'center',
@@ -363,17 +375,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#E3EFFA',
     width: '100%',
     height: 165,
-    padding: 10,
     justifyContent: 'center',
     alignSelf: 'center',
     borderRadius: 10,
-    marginBottom: 200,
+    marginBottom: 150,
   },
   noteText: {
     textAlign: 'center',
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
+  },
+  timerText: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 80,
   },
 });
 

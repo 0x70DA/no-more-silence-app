@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTimer as practiceTimer } from '../SoundPractice';
+import { useTimer as identificationTimer } from '../SoundIdentification';
 
 const en = require('../../locales/en/sounds.json');
 const ar = require('../../locales/ar/sounds.json');
@@ -16,6 +18,11 @@ const sounds = [
 ];
 
 const SoundsScreen = ({ navigation }) => {
+  const seconds = practiceTimer() || identificationTimer() || 0;
+  // Convert seconds to minutes and seconds for display
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
   const [selectedSound, setSelectedSound] = useState(null);
   const [language, setLanguage] = useState('en');
   const [text, setText] = useState(null);
@@ -59,6 +66,12 @@ const SoundsScreen = ({ navigation }) => {
             <Icon name="home" size={30} color="white" onPress={() => navigation.navigate('Home')} />
           </TouchableOpacity>
         </View>
+      </View>
+
+      <View>
+        <Text style={styles.timerText}>
+          {language === 'en' ? 'Time Remaining: ' : 'الوقت المتبقي: '}{minutes}:{remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}
+        </Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -106,7 +119,7 @@ const styles = StyleSheet.create({
   },
   accountButton: {
     left: 5,
-    top: 15,
+    top: 20,
     position: 'relative',
   },
   screenTitle: {
@@ -131,8 +144,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 10,
     backgroundColor: '#D9D9D9',
-    width: '90%',
     alignSelf: 'center',
+    width: 300,
   },
   soundText: {
     color: 'black',
@@ -144,8 +157,15 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   scrollViewContent: {
-    paddingTop: 90,
-    paddingBottom: 80,
+    paddingBottom: 50,
+    width: '100%',
+  },
+  timerText: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 80,
   },
 });
 
